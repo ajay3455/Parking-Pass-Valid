@@ -28,6 +28,7 @@
             width: 100%;
             max-width: 1100px;
             padding: 15px;
+            box-sizing: border-box; /* Include padding in total width */
         }
 
         .form-container, .ticket-container {
@@ -38,6 +39,7 @@
             width: 100%;
             max-width: 500px;
             margin: 10px;
+            box-sizing: border-box; /* Include padding and border in total width */
         }
 
         h1 {
@@ -67,6 +69,7 @@
             border: 2px solid #95d5b2;
             border-radius: 6px;
             font-size: 16px;
+            box-sizing: border-box; /* Include padding and border in total width */
         }
 
         button {
@@ -90,9 +93,11 @@
             padding: 15px;
             display: inline-block;
             width: 100%;
-            box-sizing: border-box;
+            max-width: 600px; /* Limit the max width to fit within printable area */
+            box-sizing: border-box; /* Include padding and border in total width */
             text-align: center;
             page-break-inside: avoid;
+            margin: 0 auto; /* Center the ticket content */
         }
 
         /* Enhanced styles for better organization */
@@ -102,6 +107,7 @@
             padding: 10px;
             margin-bottom: 10px;
             text-align: left;
+            box-sizing: border-box; /* Include padding and border in total width */
         }
 
         .info-box p {
@@ -123,6 +129,32 @@
 
         .barcode-container {
             margin-top: 15px;
+        }
+
+        .warning {
+            color: #d00000;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .action-buttons button {
+            width: 100%;
+            background-color: #40916c;
+            padding: 12px;
+        }
+
+        .action-buttons button:hover {
+            background-color: #2d6a4f;
+        }
+
+        .action-buttons button:active {
+            background-color: #1b4332;
         }
 
         /* Print Styles */
@@ -148,7 +180,7 @@
                 position: absolute;
                 top: 0;
                 left: 0;
-                margin: 0;
+                margin: 0 auto;
                 padding: 0;
                 width: 100%;
                 height: auto;
@@ -158,17 +190,19 @@
             }
 
             .ticket-content {
-                width: auto;
-                max-width: none;
+                width: 100%;
+                max-width: 100%;
+                margin: 0 auto;
             }
 
             .action-buttons {
                 display: none;
             }
 
-            /* Remove page margins */
+            /* Set page margins to prevent content from being cut off */
             @page {
-                margin: 0;
+                size: auto;
+                margin: 0.5in; /* Adjust margins as needed */
             }
         }
     </style>
@@ -327,8 +361,8 @@
             const expirationYear = expirationDate.getFullYear();
             const expirationTime = expirationDate.toLocaleTimeString();
 
-            // Prepare data for barcode (you can customize this as needed)
-            const barcodeData = licensePlate + unitNumber + expirationDate.getTime();
+            // Prepare data for barcode
+            const barcodeData = licensePlate + '-' + unitNumber + '-' + expirationDate.getTime();
 
             const passHtml = `
                 <div class="ticket-content">
