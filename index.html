@@ -62,18 +62,26 @@
             color: #555;
         }
 
+        /* Add styles for required field stars */
+        .required {
+            color: #d00000;
+            margin-left: 4px;
+        }
+
         input, select {
             width: 100%;
             padding: 10px;
             margin-bottom: 12px;
-            border: 2px solid #95d5b2;
+            border: 2px solid #2d6a4f; /* Dark green border by default */
             border-radius: 6px;
             font-size: 16px;
             box-sizing: border-box;
+            transition: border-color 0.3s;
         }
 
-        input:required {
-            border-color: #d00000;
+        /* Error state for invalid fields */
+        .error {
+            border-color: #d00000 !important;
         }
 
         button {
@@ -257,13 +265,13 @@
                 <fieldset>
                     <legend>Visitor Information</legend>
 
-                    <label for="visitorName">Visitor's Name:</label>
+                    <label for="visitorName">Visitor's Name:<span class="required">*</span></label>
                     <input type="text" id="visitorName" placeholder="e.g., John Doe" required>
 
-                    <label for="licensePlate">Visitor's License Plate:</label>
+                    <label for="licensePlate">Visitor's License Plate:<span class="required">*</span></label>
                     <input type="text" id="licensePlate" placeholder="e.g., ABC-1234" required>
 
-                    <label for="visitorType">Visitor Type:</label>
+                    <label for="visitorType">Visitor Type:<span class="required">*</span></label>
                     <select id="visitorType" required>
                         <option value="">Select Visitor Type</option>
                         <option value="Resident Visitor">Resident Visitor</option>
@@ -272,13 +280,13 @@
 
                     <!-- Unit Number (for Resident Visitor) -->
                     <div id="unitNumberContainer" style="display: none;">
-                        <label for="unitNumber">Unit Number Visiting:</label>
+                        <label for="unitNumber">Unit Number Visiting:<span class="required">*</span></label>
                         <input type="text" id="unitNumber" placeholder="e.g., 101">
                     </div>
 
                     <!-- Purpose of Visit (for Contractor) -->
                     <div id="purposeContainer" style="display: none;">
-                        <label for="purpose">Purpose of Visit:</label>
+                        <label for="purpose">Purpose of Visit:<span class="required">*</span></label>
                         <input type="text" id="purpose" placeholder="e.g., HVAC Maintenance">
                     </div>
                 </fieldset>
@@ -287,7 +295,7 @@
                 <fieldset>
                     <legend>Parking Details</legend>
 
-                    <label for="duration">Duration of Pass:</label>
+                    <label for="duration">Duration of Pass:<span class="required">*</span></label>
                     <select id="duration" required>
                         <option value="">Select Duration</option>
                         <option value="15 minutes">15 minutes</option>
@@ -312,7 +320,7 @@
                 <fieldset>
                     <legend>Issuing Details</legend>
 
-                    <label for="issuingGuard">Issuing Guard:</label>
+                    <label for="issuingGuard">Issuing Guard:<span class="required">*</span></label>
                     <select id="issuingGuard" required>
                         <option value="">Select a guard</option>
                         <option value="Ajaypreet">Ajaypreet</option>
@@ -401,7 +409,7 @@
             const durationsRequiringContact = ['1 hour', '2 hours', '4 hours', '8 hours', '12 hours', '24 hours'];
             if (durationsRequiringContact.includes(selectedDuration)) {
                 contactNumberInput.required = true;
-                contactNumberLabel.innerHTML = "Visitor's Contact Number (Required):";
+                contactNumberLabel.innerHTML = "Visitor's Contact Number (Required):<span class='required'>*</span>";
             } else {
                 contactNumberInput.required = false;
                 contactNumberLabel.innerHTML = "Visitor's Contact Number (Optional):";
@@ -414,14 +422,14 @@
         // Update when duration changes
         durationSelect.addEventListener('change', updateContactNumberRequirement);
 
-        // Sample pass HTML
+        // Sample pass HTML with rearranged expiry information
         const samplePass = `
             <div class="ticket-content">
                 <div class="expiry">
                     Valid Until:<br>
-                    <span style="font-size: 30px;">28th NOV</span>
-                    <span style="font-size: 28px;">2023</span>
                     <span style="font-size: 26px;">HH:MM AM/PM</span>
+                    <span style="font-size: 30px;">28th NOV</span>
+                    <span style="font-size: 28px;">2024</span>
                 </div>
                 <!-- Barcode Placeholder -->
                 <div class="barcode-container">
@@ -454,9 +462,40 @@
             margin: 0
         });
 
+        // Form Validation and Pass Generation
         document.getElementById('passForm').addEventListener('submit', function (e) {
             e.preventDefault();
-            generatePass();
+            if (validateForm()) {
+                generatePass();
+            }
+        });
+
+        // Function to validate form fields
+        function validateForm() {
+            let isValid = true;
+            const form = document.getElementById('passForm');
+            const requiredFields = form.querySelectorAll('[required]');
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.classList.add('error');
+                    isValid = false;
+                } else {
+                    field.classList.remove('error');
+                }
+            });
+
+            return isValid;
+        }
+
+        // Remove error class on input
+        const allInputs = document.querySelectorAll('input, select');
+        allInputs.forEach(input => {
+            input.addEventListener('input', () => {
+                if (input.value.trim()) {
+                    input.classList.remove('error');
+                }
+            });
         });
 
         function generatePass() {
@@ -552,9 +591,9 @@
                 <div class="ticket-content">
                     <div class="expiry">
                         Valid Until:<br>
+                        <span style="font-size: 26px;">${expirationTime}</span>
                         <span style="font-size: 30px;">${formattedExpirationDateForDisplay}</span>
                         <span style="font-size: 28px;">${expirationYear}</span>
-                        <span style="font-size: 26px;">${expirationTime}</span>
                     </div>
                     <!-- Barcode will be inserted here -->
                     <div class="barcode-container">
