@@ -114,24 +114,29 @@
         }
 
         .info-box p {
-            margin: 5px 0;
-            font-size: 18px;
+            margin: 10px 0;
+            font-size: 20px; /* Increased font size */
         }
 
         .info-box p strong {
             display: inline-block;
-            width: 180px;
+            width: 220px; /* Increased width to accommodate larger text */
         }
 
         .expiry {
-            font-size: 28px;
+            font-size: 32px; /* Increased font size */
             font-weight: bold;
             color: #d00000;
             margin-bottom: 20px;
         }
 
+        .expiry span {
+            display: block;
+            margin-top: 5px;
+        }
+
         .barcode-container {
-            margin-top: 15px;
+            margin-top: 20px;
         }
 
         .barcode-container img {
@@ -144,7 +149,8 @@
         .warning {
             color: #d00000;
             font-weight: bold;
-            margin-top: 10px;
+            margin-top: 15px;
+            font-size: 18px; /* Increased font size */
         }
 
         .action-buttons {
@@ -267,13 +273,13 @@
                     <!-- Unit Number (for Resident Visitor) -->
                     <div id="unitNumberContainer" style="display: none;">
                         <label for="unitNumber">Unit Number Visiting:</label>
-                        <input type="text" id="unitNumber" placeholder="e.g., 101" required>
+                        <input type="text" id="unitNumber" placeholder="e.g., 101">
                     </div>
 
                     <!-- Purpose of Visit (for Contractor) -->
                     <div id="purposeContainer" style="display: none;">
                         <label for="purpose">Purpose of Visit:</label>
-                        <input type="text" id="purpose" placeholder="e.g., HVAC Maintenance" required>
+                        <input type="text" id="purpose" placeholder="e.g., HVAC Maintenance">
                     </div>
                 </fieldset>
 
@@ -359,19 +365,31 @@
         const visitorTypeSelect = document.getElementById('visitorType');
         const unitNumberContainer = document.getElementById('unitNumberContainer');
         const purposeContainer = document.getElementById('purposeContainer');
+        const unitNumberInput = document.getElementById('unitNumber');
+        const purposeInput = document.getElementById('purpose');
 
-        visitorTypeSelect.addEventListener('change', function() {
+        function updateVisitorTypeFields() {
             if (visitorTypeSelect.value === 'Resident Visitor') {
                 unitNumberContainer.style.display = 'block';
                 purposeContainer.style.display = 'none';
+                unitNumberInput.required = true;
+                purposeInput.required = false;
             } else if (visitorTypeSelect.value === 'Contractor') {
                 unitNumberContainer.style.display = 'none';
                 purposeContainer.style.display = 'block';
+                unitNumberInput.required = false;
+                purposeInput.required = true;
             } else {
                 unitNumberContainer.style.display = 'none';
                 purposeContainer.style.display = 'none';
+                unitNumberInput.required = false;
+                purposeInput.required = false;
             }
-        });
+        }
+
+        visitorTypeSelect.addEventListener('change', updateVisitorTypeFields);
+        // Initial call to set up the form correctly
+        updateVisitorTypeFields();
 
         // Handle Duration Selection for Contact Number Requirement
         const durationSelect = document.getElementById('duration');
@@ -401,16 +419,16 @@
             <div class="ticket-content">
                 <div class="expiry">
                     Valid Until:<br>
-                    <span style="font-size: 26px;">28th NOV</span><br>
-                    <span style="font-size: 24px;">2023</span><br>
-                    <span style="font-size: 22px;">HH:MM AM/PM</span>
+                    <span style="font-size: 30px;">28th NOV</span>
+                    <span style="font-size: 28px;">2023</span>
+                    <span style="font-size: 26px;">HH:MM AM/PM</span>
                 </div>
                 <!-- Barcode Placeholder -->
                 <div class="barcode-container">
                     <img id="sampleBarcode" alt="Barcode">
                 </div>
                 <img src="https://i.imgur.com/LmweghF.png" alt="The Gloucester Logo" class="logo-img">
-                <h2>VISITOR PARKING PASS</h2>
+                <h2 style="font-size: 28px;">VISITOR PARKING PASS</h2>
                 <div class="info-box">
                     <p><strong>Date/Time Issued:</strong> MM/DD/YYYY HH:MM AM/PM</p>
                     <p><strong>Visitor's Name:</strong> ____________</p>
@@ -426,13 +444,13 @@
         // Display the sample pass on page load
         document.getElementById('ticketPreview').innerHTML = samplePass;
         // Generate sample barcode
-        JsBarcode("#sampleBarcode", "No phone number present", {
+        JsBarcode("#sampleBarcode", "000000", {
             format: "CODE39",
             displayValue: false,
             lineColor: "#000000",
             background: "#ffffff",
-            width: 2.5,
-            height: 80,
+            width: 4,   // Increased width for darker, wider bars
+            height: 100, // Increased height
             margin: 0
         });
 
@@ -445,16 +463,23 @@
             const visitorName = document.getElementById('visitorName').value.trim();
             const licensePlate = document.getElementById('licensePlate').value.trim().toUpperCase();
             const visitorType = document.getElementById('visitorType').value;
-            const unitNumber = document.getElementById('unitNumber').value.trim();
-            const purpose = document.getElementById('purpose').value.trim();
-            const contactNumber = document.getElementById('contactNumber').value.trim();
-            const duration = document.getElementById('duration').value.trim();
+            const unitNumber = unitNumberInput.value.trim();
+            const purpose = purposeInput.value.trim();
+            const contactNumber = contactNumberInput.value.trim();
+            const duration = durationSelect.value.trim();
             const issuingGuard = document.getElementById('issuingGuard').value.trim();
 
             // Check that duration is selected
             if (!duration) {
                 alert('Please select a duration.');
                 durationSelect.focus();
+                return;
+            }
+
+            // Validate visitor type
+            if (!visitorType) {
+                alert('Please select a visitor type.');
+                visitorTypeSelect.focus();
                 return;
             }
 
@@ -507,7 +532,7 @@
             const expirationTime = expirationDate.toLocaleTimeString();
 
             // Prepare data for barcode
-            let barcodeData = contactNumber !== '' ? contactNumber : 'No phone number present';
+            let barcodeData = contactNumber !== '' ? contactNumber : '000000';
 
             // Prepare Unit Number or Purpose based on Visitor Type
             let unitOrPurposeLabel = '';
@@ -527,16 +552,16 @@
                 <div class="ticket-content">
                     <div class="expiry">
                         Valid Until:<br>
-                        <span style="font-size: 26px;">${formattedExpirationDateForDisplay}</span><br>
-                        <span style="font-size: 24px;">${expirationYear}</span><br>
-                        <span style="font-size: 22px;">${expirationTime}</span>
+                        <span style="font-size: 30px;">${formattedExpirationDateForDisplay}</span>
+                        <span style="font-size: 28px;">${expirationYear}</span>
+                        <span style="font-size: 26px;">${expirationTime}</span>
                     </div>
                     <!-- Barcode will be inserted here -->
                     <div class="barcode-container">
                         <img id="barcode" alt="Barcode">
                     </div>
                     <img src="https://i.imgur.com/LmweghF.png" alt="The Gloucester Logo" class="logo-img">
-                    <h2>VISITOR PARKING PASS</h2>
+                    <h2 style="font-size: 28px;">VISITOR PARKING PASS</h2>
                     <div class="info-box">
                         <p><strong>Date/Time Issued:</strong> ${formattedDate}</p>
                         <p><strong>Visitor's Name:</strong> ${visitorName}</p>
@@ -557,8 +582,8 @@
                 displayValue: false,
                 lineColor: "#000000",
                 background: "#ffffff",
-                width: 2.5,
-                height: 80,
+                width: 4,    // Increased width for darker, wider bars
+                height: 100, // Increased height
                 margin: 0
             });
         }
