@@ -101,7 +101,7 @@
         }
 
         .ticket-content {
-            border: 2px solid #000;
+            border: 2px solid #000; /* Outer border to be removed in print */
             padding: 15px;
             display: inline-block;
             width: 100%;
@@ -237,6 +237,7 @@
                 width: 100%;
                 max-width: 100%;
                 margin: 0 auto;
+                border: none; /* Remove outer border when printing */
             }
 
             .action-buttons {
@@ -353,6 +354,7 @@
             const day = date.getDate();
             const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN",
                                 "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+
             const month = monthNames[date.getMonth()];
 
             // Get the day suffix
@@ -382,16 +384,25 @@
                 purposeContainer.style.display = 'none';
                 unitNumberInput.required = true;
                 purposeInput.required = false;
+                // Add required star
+                document.querySelector('#unitNumberContainer label .required').style.display = 'inline';
+                document.querySelector('#purposeContainer label .required')?.remove();
             } else if (visitorTypeSelect.value === 'Contractor') {
                 unitNumberContainer.style.display = 'none';
                 purposeContainer.style.display = 'block';
                 unitNumberInput.required = false;
                 purposeInput.required = true;
+                // Add required star
+                document.querySelector('#purposeContainer label .required').style.display = 'inline';
+                document.querySelector('#unitNumberContainer label .required')?.remove();
             } else {
                 unitNumberContainer.style.display = 'none';
                 purposeContainer.style.display = 'none';
                 unitNumberInput.required = false;
                 purposeInput.required = false;
+                // Remove required stars if any
+                document.querySelector('#unitNumberContainer label .required')?.remove();
+                document.querySelector('#purposeContainer label .required')?.remove();
             }
         }
 
@@ -429,7 +440,7 @@
                     Valid Until:<br>
                     <span style="font-size: 26px;">HH:MM AM/PM</span>
                     <span style="font-size: 30px;">28th NOV</span>
-                    <span style="font-size: 28px;">2024</span>
+                    <span style="font-size: 28px;">2023</span>
                 </div>
                 <!-- Barcode Placeholder -->
                 <div class="barcode-container">
@@ -475,7 +486,7 @@
             let isValid = true;
             const form = document.getElementById('passForm');
             const requiredFields = form.querySelectorAll('[required]');
-            
+
             requiredFields.forEach(field => {
                 if (!field.value.trim()) {
                     field.classList.add('error');
@@ -570,7 +581,7 @@
             const expirationYear = expirationDate.getFullYear();
             const expirationTime = expirationDate.toLocaleTimeString();
 
-            // Prepare data for barcode
+            // Prepare data for barcode: only phone number or '000000'
             let barcodeData = contactNumber !== '' ? contactNumber : '000000';
 
             // Prepare Unit Number or Purpose based on Visitor Type
@@ -615,7 +626,7 @@
 
             document.getElementById('ticketPreview').innerHTML = passHtml;
 
-            // Generate Barcode with increased width and height for better scannability
+            // Generate Barcode with only phone number or '000000'
             JsBarcode("#barcode", barcodeData, {
                 format: "CODE39",
                 displayValue: false,
