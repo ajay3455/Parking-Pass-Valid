@@ -222,6 +222,9 @@
                 <label for="unitNumber">Unit Number Visiting:</label>
                 <input type="text" id="unitNumber" placeholder="e.g., 101" required>
 
+                <label for="contactNumber">Visitor's Contact Number (Optional):</label>
+                <input type="text" id="contactNumber" placeholder="e.g., 123-456-7890">
+
                 <label for="duration">Duration of Pass:</label>
                 <select id="duration">
                     <option value="24 hours">24 hours (Default)</option>
@@ -298,6 +301,7 @@
                     <p><strong>Visitor's License Plate:</strong> ____________</p>
                     <p><strong>Unit Number Visiting:</strong> ____</p>
                     <p><strong>Issuing Guard:</strong> Sample Guard</p>
+                    <!-- Contact number is not displayed -->
                 </div>
                 <!-- Barcode Placeholder -->
                 <div class="barcode-container">
@@ -320,6 +324,7 @@
         function generatePass() {
             const licensePlate = document.getElementById('licensePlate').value.trim().toUpperCase();
             const unitNumber = document.getElementById('unitNumber').value.trim();
+            const contactNumber = document.getElementById('contactNumber').value.trim();
             const duration = document.getElementById('duration').value.trim();
             const issuingGuard = document.getElementById('issuingGuard').value.trim();
 
@@ -362,7 +367,10 @@
             const expirationTime = expirationDate.toLocaleTimeString();
 
             // Prepare data for barcode
-            const barcodeData = licensePlate + '-' + unitNumber + '-' + expirationDate.getTime();
+            let barcodeData = licensePlate + '-' + unitNumber + '-' + expirationDate.getTime();
+            if (contactNumber !== '') {
+                barcodeData += '-' + contactNumber;
+            }
 
             const passHtml = `
                 <div class="ticket-content">
@@ -379,6 +387,7 @@
                         <p><strong>Visitor's License Plate:</strong> ${licensePlate}</p>
                         <p><strong>Unit Number Visiting:</strong> ${unitNumber}</p>
                         <p><strong>Issuing Guard:</strong> ${issuingGuard}</p>
+                        <!-- Contact number is not displayed -->
                     </div>
                     <!-- Barcode will be inserted here -->
                     <div class="barcode-container">
