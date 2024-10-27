@@ -6,6 +6,7 @@
     <!-- Include QRCode.js Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
+        /* Styles remain mostly the same */
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
         body {
@@ -13,10 +14,10 @@
             background: linear-gradient(135deg, #e0f7e9, #b2f2bb);
             color: #333;
             margin: 0;
-            padding: 0; /* Removed padding to eliminate extra space */
+            padding: 0;
             display: flex;
             justify-content: center;
-            align-items: flex-start; /* Align items to the top */
+            align-items: flex-start;
             min-height: 100vh;
         }
 
@@ -26,7 +27,7 @@
             justify-content: center;
             width: 100%;
             max-width: 1100px;
-            padding: 15px; /* Added padding to container */
+            padding: 15px;
         }
 
         .form-container, .ticket-container {
@@ -118,16 +119,16 @@
             width: 100%;
             box-sizing: border-box;
             text-align: center;
-            page-break-inside: avoid; /* Prevent content from splitting across pages */
+            page-break-inside: avoid;
         }
 
         .ticket-content h2 {
-            font-size: 24px; /* Increased font size for better visibility */
+            font-size: 24px;
             margin-bottom: 15px;
         }
 
         .ticket-content p {
-            font-size: 18px; /* Increased font size for better readability */
+            font-size: 18px;
             margin: 5px 0;
         }
 
@@ -146,7 +147,7 @@
 
         /* Expiry date at the top */
         .expiry {
-            font-size: 28px; /* Increased font size for prominence */
+            font-size: 28px;
             font-weight: bold;
             color: #d00000;
             margin-bottom: 20px;
@@ -261,10 +262,36 @@
     </div>
 
     <script>
+        // Function to format the date as "28th NOV"
+        function formatDate(date) {
+            const day = date.getDate();
+            const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+                                "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+            const month = monthNames[date.getMonth()];
+
+            // Get the day suffix
+            function getDaySuffix(d) {
+                if (d > 3 && d < 21) return 'th';
+                switch (d % 10) {
+                    case 1:  return "st";
+                    case 2:  return "nd";
+                    case 3:  return "rd";
+                    default: return "th";
+                }
+            }
+
+            return `${day}${getDaySuffix(day)} ${month}`;
+        }
+
         // Sample pass HTML
         const samplePass = `
             <div class="ticket-content">
-                <div class="expiry">Valid Until: MM/DD/YYYY HH:MM AM/PM</div>
+                <div class="expiry">
+                    Valid Until:<br>
+                    <span style="font-size: 26px;">28th NOV</span><br>
+                    <span style="font-size: 24px;">2023</span><br>
+                    <span style="font-size: 22px;">HH:MM AM/PM</span>
+                </div>
                 <img src="https://i.imgur.com/LmweghF.png" alt="The Gloucester Logo" class="logo-img">
                 <h2>VISITOR PARKING PASS</h2>
                 <p><strong>Date/Time Issued:</strong> MM/DD/YYYY HH:MM AM/PM</p>
@@ -328,6 +355,9 @@
             }
 
             const formattedExpirationDate = expirationDate.toLocaleString();
+            const formattedExpirationDateForDisplay = formatDate(expirationDate);
+            const expirationYear = expirationDate.getFullYear();
+            const expirationTime = expirationDate.toLocaleTimeString();
 
             // Prepare data for QR code
             const qrData = `
@@ -340,7 +370,12 @@ Issuing Guard: ${issuingGuard}
 
             const passHtml = `
                 <div class="ticket-content">
-                    <div class="expiry">Valid Until: ${formattedExpirationDate}</div>
+                    <div class="expiry">
+                        Valid Until:<br>
+                        <span style="font-size: 26px;">${formattedExpirationDateForDisplay}</span><br>
+                        <span style="font-size: 24px;">${expirationYear}</span><br>
+                        <span style="font-size: 22px;">${expirationTime}</span>
+                    </div>
                     <img src="https://i.imgur.com/LmweghF.png" alt="The Gloucester Logo" class="logo-img">
                     <h2>VISITOR PARKING PASS</h2>
                     <p><strong>Date/Time Issued:</strong> ${formattedDate}</p>
@@ -357,7 +392,7 @@ Issuing Guard: ${issuingGuard}
             document.getElementById('ticketPreview').innerHTML = passHtml;
 
             // Generate QR Code
-            var qrcode = new QRCode(document.querySelector("#qrCode"), {
+            new QRCode(document.querySelector("#qrCode"), {
                 text: qrData.trim(),
                 width: 150,
                 height: 150,
