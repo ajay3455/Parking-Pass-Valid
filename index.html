@@ -6,7 +6,6 @@
     <!-- Include QRCode.js Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        /* Existing styles... */
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
         body {
@@ -14,10 +13,10 @@
             background: linear-gradient(135deg, #e0f7e9, #b2f2bb);
             color: #333;
             margin: 0;
-            padding: 10px;
+            padding: 0; /* Removed padding to eliminate extra space */
             display: flex;
             justify-content: center;
-            align-items: flex-start; /* Changed to flex-start for better alignment */
+            align-items: flex-start; /* Align items to the top */
             min-height: 100vh;
         }
 
@@ -27,6 +26,7 @@
             justify-content: center;
             width: 100%;
             max-width: 1100px;
+            padding: 15px; /* Added padding to container */
         }
 
         .form-container, .ticket-container {
@@ -118,27 +118,22 @@
             width: 100%;
             box-sizing: border-box;
             text-align: center;
+            page-break-inside: avoid; /* Prevent content from splitting across pages */
         }
 
         .ticket-content h2 {
-            font-size: 20px;
+            font-size: 24px; /* Increased font size for better visibility */
             margin-bottom: 15px;
         }
 
         .ticket-content p {
-            font-size: 16px;
+            font-size: 18px; /* Increased font size for better readability */
             margin: 5px 0;
         }
 
         .logo-img {
             width: 200px;
             margin: 0 auto 10px auto;
-            display: block;
-        }
-
-        .car-img {
-            width: 80px;
-            margin: 10px auto 0 auto;
             display: block;
         }
 
@@ -151,7 +146,7 @@
 
         /* Expiry date at the top */
         .expiry {
-            font-size: 24px;
+            font-size: 28px; /* Increased font size for prominence */
             font-weight: bold;
             color: #d00000;
             margin-bottom: 20px;
@@ -166,6 +161,15 @@
 
         /* Print Styles */
         @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            .container {
+                padding: 0;
+            }
+
             body * {
                 visibility: hidden;
             }
@@ -181,19 +185,24 @@
                 margin: 0;
                 padding: 0;
                 width: 100%;
-                height: 100%; /* Ensure it fills the page */
+                height: auto;
                 display: flex;
                 justify-content: center;
-                align-items: center;
+                align-items: flex-start;
             }
 
             .ticket-content {
-                width: 90%; /* Adjust width for printing */
-                max-width: 800px; /* Max width for printing */
+                width: auto;
+                max-width: none;
             }
 
             .action-buttons {
                 display: none;
+            }
+
+            /* Remove page margins */
+            @page {
+                margin: 0;
             }
         }
     </style>
@@ -266,7 +275,7 @@
                 <div class="qr-code" id="sampleQRCode">
                     <img src="https://via.placeholder.com/150" alt="QR Code">
                 </div>
-                <img src="https://i.imgur.com/wdPLlvu.png" alt="Car Image" class="car-img">
+                <!-- Removed car image -->
                 <p class="warning">Please display this pass on your dashboard at all times.</p>
             </div>
         `;
@@ -340,7 +349,7 @@ Issuing Guard: ${issuingGuard}
                     <p><strong>Issuing Guard:</strong> ${issuingGuard}</p>
                     <!-- QR Code will be inserted here -->
                     <div class="qr-code" id="qrCode"></div>
-                    <img src="https://i.imgur.com/wdPLlvu.png" alt="Car Image" class="car-img">
+                    <!-- Removed car image -->
                     <p class="warning">Please display this pass on your dashboard at all times.</p>
                 </div>
             `;
