@@ -6,7 +6,7 @@
     <!-- Include JsBarcode Library -->
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
     <style>
-        /* Styles remain mostly the same with enhancements for layout */
+        /* Styles with enhancements for layout and barcode visibility */
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
         body {
@@ -28,7 +28,7 @@
             width: 100%;
             max-width: 1100px;
             padding: 15px;
-            box-sizing: border-box; /* Include padding in total width */
+            box-sizing: border-box;
         }
 
         .form-container, .ticket-container {
@@ -39,7 +39,7 @@
             width: 100%;
             max-width: 500px;
             margin: 10px;
-            box-sizing: border-box; /* Include padding and border in total width */
+            box-sizing: border-box;
         }
 
         h1 {
@@ -51,7 +51,7 @@
         .gloucester-logo img {
             display: block;
             margin: 0 auto;
-            width: 150px; /* Reduced size */
+            width: 120px; /* Reduced size */
             height: auto;
         }
 
@@ -69,7 +69,7 @@
             border: 2px solid #95d5b2;
             border-radius: 6px;
             font-size: 16px;
-            box-sizing: border-box; /* Include padding and border in total width */
+            box-sizing: border-box;
         }
 
         button {
@@ -93,21 +93,20 @@
             padding: 15px;
             display: inline-block;
             width: 100%;
-            max-width: 600px; /* Limit the max width to fit within printable area */
-            box-sizing: border-box; /* Include padding and border in total width */
+            max-width: 600px;
+            box-sizing: border-box;
             text-align: center;
             page-break-inside: avoid;
-            margin: 0 auto; /* Center the ticket content */
+            margin: 0 auto;
         }
 
-        /* Enhanced styles for better organization */
         .info-box {
             border: 2px solid #95d5b2;
             border-radius: 8px;
             padding: 10px;
             margin-bottom: 10px;
             text-align: left;
-            box-sizing: border-box; /* Include padding and border in total width */
+            box-sizing: border-box;
         }
 
         .info-box p {
@@ -210,7 +209,7 @@
             /* Set minimal page margins */
             @page {
                 size: auto;
-                margin: 0.25in; /* Minimal margins */
+                margin: 0.25in;
             }
         }
     </style>
@@ -322,11 +321,13 @@
         // Display the sample pass on page load
         document.getElementById('ticketPreview').innerHTML = samplePass;
         // Generate sample barcode
-        JsBarcode("#sampleBarcode", "SAMPLE123", {
-            format: "CODE128",
+        JsBarcode("#sampleBarcode", "No phone number present", {
+            format: "CODE39",
             displayValue: false,
-            width: 1, // Reduced width
-            height: 60,
+            lineColor: "#000000",
+            background: "#ffffff",
+            width: 2.5, // Increased width for darker bars
+            height: 80, // Increased height
             margin: 0
         });
 
@@ -375,16 +376,12 @@
                     break;
             }
 
-            const formattedExpirationDate = expirationDate.toLocaleString();
             const formattedExpirationDateForDisplay = formatDate(expirationDate);
             const expirationYear = expirationDate.getFullYear();
             const expirationTime = expirationDate.toLocaleTimeString();
 
             // Prepare data for barcode
-            let barcodeData = licensePlate + '-' + unitNumber + '-' + expirationDate.getTime();
-            if (contactNumber !== '') {
-                barcodeData += '-' + contactNumber;
-            }
+            let barcodeData = contactNumber !== '' ? contactNumber : 'No phone number present';
 
             const passHtml = `
                 <div class="ticket-content">
@@ -413,22 +410,16 @@
 
             document.getElementById('ticketPreview').innerHTML = passHtml;
 
-            // Generate Barcode with reduced width and check for data length
-            let barcodeOptions = {
-                format: "CODE128",
+            // Generate Barcode with increased width and height for better scannability
+            JsBarcode("#barcode", barcodeData, {
+                format: "CODE39",
                 displayValue: false,
-                width: 1, // Reduced width
-                height: 60,
+                lineColor: "#000000",
+                background: "#ffffff",
+                width: 2.5, // Increased width for darker bars
+                height: 80,  // Increased height
                 margin: 0
-            };
-
-            // Check if data length exceeds CODE128 capacity
-            if (barcodeData.length > 80) {
-                alert("The data to encode is too long for CODE128. Please reduce the input data.");
-                return;
-            }
-
-            JsBarcode("#barcode", barcodeData, barcodeOptions);
+            });
         }
 
         document.getElementById('printPass').addEventListener('click', function () {
