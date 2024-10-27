@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>The Gloucester on Yonge - Parking Pass Generator</title>
+    <title>Exterior Parking Pass Generator</title>
     <!-- Include JsBarcode Library -->
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
     <style>
@@ -51,7 +51,7 @@
         .gloucester-logo img {
             display: block;
             margin: 0 auto;
-            width: 120px; /* Reduced size */
+            width: 100px; /* Reduced size */
             height: auto;
         }
 
@@ -222,12 +222,29 @@
             <div class="gloucester-logo">
                 <img src="https://i.imgur.com/LmweghF.png" alt="The Gloucester Logo">
             </div>
+            <h1>Exterior Parking Pass Generator</h1>
             <form id="passForm">
                 <label for="licensePlate">Visitor's License Plate:</label>
                 <input type="text" id="licensePlate" placeholder="e.g., ABC-1234" required>
 
-                <label for="unitNumber">Unit Number Visiting:</label>
-                <input type="text" id="unitNumber" placeholder="e.g., 101" required>
+                <label for="visitorType">Visitor Type:</label>
+                <select id="visitorType" required>
+                    <option value="">Select Visitor Type</option>
+                    <option value="Resident Visitor">Resident Visitor</option>
+                    <option value="Contractor">Contractor</option>
+                </select>
+
+                <!-- Unit Number (for Resident Visitor) -->
+                <div id="unitNumberContainer" style="display: none;">
+                    <label for="unitNumber">Unit Number Visiting:</label>
+                    <input type="text" id="unitNumber" placeholder="e.g., 101">
+                </div>
+
+                <!-- Purpose of Visit (for Contractor) -->
+                <div id="purposeContainer" style="display: none;">
+                    <label for="purpose">Purpose of Visit:</label>
+                    <input type="text" id="purpose" placeholder="e.g., HVAC Maintenance">
+                </div>
 
                 <label for="contactNumber">Visitor's Contact Number (Optional):</label>
                 <input type="text" id="contactNumber" placeholder="e.g., 123-456-7890">
@@ -292,6 +309,24 @@
             return `${day}${getDaySuffix(day)} ${month}`;
         }
 
+        // Handle Visitor Type Selection
+        const visitorTypeSelect = document.getElementById('visitorType');
+        const unitNumberContainer = document.getElementById('unitNumberContainer');
+        const purposeContainer = document.getElementById('purposeContainer');
+
+        visitorTypeSelect.addEventListener('change', function() {
+            if (visitorTypeSelect.value === 'Resident Visitor') {
+                unitNumberContainer.style.display = 'block';
+                purposeContainer.style.display = 'none';
+            } else if (visitorTypeSelect.value === 'Contractor') {
+                unitNumberContainer.style.display = 'none';
+                purposeContainer.style.display = 'block';
+            } else {
+                unitNumberContainer.style.display = 'none';
+                purposeContainer.style.display = 'none';
+            }
+        });
+
         // Sample pass HTML
         const samplePass = `
             <div class="ticket-content">
@@ -310,7 +345,7 @@
                 <div class="info-box">
                     <p><strong>Date/Time Issued:</strong> MM/DD/YYYY HH:MM AM/PM</p>
                     <p><strong>Visitor's License Plate:</strong> ____________</p>
-                    <p><strong>Unit Number Visiting:</strong> ____</p>
+                    <p><strong>Unit Number Visiting/Purpose:</strong> ____________</p>
                     <p><strong>Issuing Guard:</strong> Sample Guard</p>
                     <!-- Contact number is not displayed -->
                 </div>
@@ -326,8 +361,8 @@
             displayValue: false,
             lineColor: "#000000",
             background: "#ffffff",
-            width: 2.5, // Increased width for darker bars
-            height: 80, // Increased height
+            width: 2.5,
+            height: 80,
             margin: 0
         });
 
@@ -338,7 +373,9 @@
 
         function generatePass() {
             const licensePlate = document.getElementById('licensePlate').value.trim().toUpperCase();
+            const visitorType = document.getElementById('visitorType').value;
             const unitNumber = document.getElementById('unitNumber').value.trim();
+            const purpose = document.getElementById('purpose').value.trim();
             const contactNumber = document.getElementById('contactNumber').value.trim();
             const duration = document.getElementById('duration').value.trim();
             const issuingGuard = document.getElementById('issuingGuard').value.trim();
@@ -383,6 +420,20 @@
             // Prepare data for barcode
             let barcodeData = contactNumber !== '' ? contactNumber : 'No phone number present';
 
+            // Prepare Unit Number or Purpose based on Visitor Type
+            let unitOrPurposeLabel = '';
+            let unitOrPurposeValue = '';
+            if (visitorType === 'Resident Visitor') {
+                unitOrPurposeLabel = "Unit Number Visiting";
+                unitOrPurposeValue = unitNumber || 'N/A';
+            } else if (visitorType === 'Contractor') {
+                unitOrPurposeLabel = "Purpose of Visit";
+                unitOrPurposeValue = purpose || 'N/A';
+            } else {
+                unitOrPurposeLabel = "Unit Number Visiting/Purpose";
+                unitOrPurposeValue = 'N/A';
+            }
+
             const passHtml = `
                 <div class="ticket-content">
                     <div class="expiry">
@@ -400,7 +451,7 @@
                     <div class="info-box">
                         <p><strong>Date/Time Issued:</strong> ${formattedDate}</p>
                         <p><strong>Visitor's License Plate:</strong> ${licensePlate}</p>
-                        <p><strong>Unit Number Visiting:</strong> ${unitNumber}</p>
+                        <p><strong>${unitOrPurposeLabel}:</strong> ${unitOrPurposeValue}</p>
                         <p><strong>Issuing Guard:</strong> ${issuingGuard}</p>
                         <!-- Contact number is not displayed -->
                     </div>
@@ -416,8 +467,8 @@
                 displayValue: false,
                 lineColor: "#000000",
                 background: "#ffffff",
-                width: 2.5, // Increased width for darker bars
-                height: 80,  // Increased height
+                width: 2.5,
+                height: 80,
                 margin: 0
             });
         }
