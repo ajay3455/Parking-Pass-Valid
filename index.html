@@ -51,7 +51,7 @@
         .gloucester-logo img {
             display: block;
             margin: 0 auto;
-            width: 200px;
+            width: 150px; /* Reduced size */
             height: auto;
         }
 
@@ -180,6 +180,7 @@
                 position: absolute;
                 top: 0;
                 left: 0;
+                right: 0;
                 margin: 0 auto;
                 padding: 0;
                 width: 100%;
@@ -199,10 +200,10 @@
                 display: none;
             }
 
-            /* Set page margins to prevent content from being cut off */
+            /* Set minimal page margins */
             @page {
                 size: auto;
-                margin: 0.5in; /* Adjust margins as needed */
+                margin: 0.25in; /* Minimal margins */
             }
         }
     </style>
@@ -294,6 +295,10 @@
                     <span style="font-size: 24px;">2023</span><br>
                     <span style="font-size: 22px;">HH:MM AM/PM</span>
                 </div>
+                <!-- Barcode Placeholder -->
+                <div class="barcode-container">
+                    <img id="sampleBarcode" alt="Barcode">
+                </div>
                 <img src="https://i.imgur.com/LmweghF.png" alt="The Gloucester Logo" class="logo-img">
                 <h2>VISITOR PARKING PASS</h2>
                 <div class="info-box">
@@ -302,10 +307,6 @@
                     <p><strong>Unit Number Visiting:</strong> ____</p>
                     <p><strong>Issuing Guard:</strong> Sample Guard</p>
                     <!-- Contact number is not displayed -->
-                </div>
-                <!-- Barcode Placeholder -->
-                <div class="barcode-container">
-                    <img id="sampleBarcode" alt="Barcode">
                 </div>
                 <p class="warning">Please display this pass on your dashboard at all times.</p>
             </div>
@@ -380,6 +381,10 @@
                         <span style="font-size: 24px;">${expirationYear}</span><br>
                         <span style="font-size: 22px;">${expirationTime}</span>
                     </div>
+                    <!-- Barcode will be inserted here -->
+                    <div class="barcode-container">
+                        <img id="barcode" alt="Barcode">
+                    </div>
                     <img src="https://i.imgur.com/LmweghF.png" alt="The Gloucester Logo" class="logo-img">
                     <h2>VISITOR PARKING PASS</h2>
                     <div class="info-box">
@@ -388,10 +393,6 @@
                         <p><strong>Unit Number Visiting:</strong> ${unitNumber}</p>
                         <p><strong>Issuing Guard:</strong> ${issuingGuard}</p>
                         <!-- Contact number is not displayed -->
-                    </div>
-                    <!-- Barcode will be inserted here -->
-                    <div class="barcode-container">
-                        <img id="barcode" alt="Barcode">
                     </div>
                     <p class="warning">Please display this pass on your dashboard at all times.</p>
                 </div>
