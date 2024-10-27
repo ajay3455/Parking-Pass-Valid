@@ -17,14 +17,14 @@
             padding: 10px;
             display: flex;
             justify-content: center;
-            align-items: center;
-            min-height: 100vh; /* Changed to min-height for better responsiveness */
+            align-items: flex-start; /* Changed to flex-start for better alignment */
+            min-height: 100vh;
         }
 
         .container {
             display: flex;
-            flex-wrap: wrap; /* Adjusted for better responsiveness */
-            justify-content: center; /* Center content */
+            flex-wrap: wrap;
+            justify-content: center;
             width: 100%;
             max-width: 1100px;
         }
@@ -34,9 +34,9 @@
             padding: 15px;
             border-radius: 12px;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-            width: 100%; /* Adjusted for better responsiveness */
-            max-width: 500px; /* Set max-width for containers */
-            margin: 10px; /* Add margin between containers */
+            width: 100%;
+            max-width: 500px;
+            margin: 10px;
         }
 
         h1 {
@@ -117,7 +117,7 @@
             display: inline-block;
             width: 100%;
             box-sizing: border-box;
-            text-align: center; /* Ensure all content is centered */
+            text-align: center;
         }
 
         .ticket-content h2 {
@@ -132,13 +132,13 @@
 
         .logo-img {
             width: 200px;
-            margin: 0 auto 10px auto; /* Center the logo */
+            margin: 0 auto 10px auto;
             display: block;
         }
 
         .car-img {
             width: 80px;
-            margin: 10px auto 0 auto; /* Center the car image */
+            margin: 10px auto 0 auto;
             display: block;
         }
 
@@ -146,7 +146,15 @@
         .qr-code {
             margin-top: 15px;
             display: flex;
-            justify-content: center; /* Center the QR code */
+            justify-content: center;
+        }
+
+        /* Expiry date at the top */
+        .expiry {
+            font-size: 24px;
+            font-weight: bold;
+            color: #d00000;
+            margin-bottom: 20px;
         }
 
         /* Adjusted ticket container to center content */
@@ -173,9 +181,15 @@
                 margin: 0;
                 padding: 0;
                 width: 100%;
+                height: 100%; /* Ensure it fills the page */
                 display: flex;
                 justify-content: center;
                 align-items: center;
+            }
+
+            .ticket-content {
+                width: 90%; /* Adjust width for printing */
+                max-width: 800px; /* Max width for printing */
             }
 
             .action-buttons {
@@ -241,10 +255,10 @@
         // Sample pass HTML
         const samplePass = `
             <div class="ticket-content">
+                <div class="expiry">Valid Until: MM/DD/YYYY HH:MM AM/PM</div>
                 <img src="https://i.imgur.com/LmweghF.png" alt="The Gloucester Logo" class="logo-img">
                 <h2>VISITOR PARKING PASS</h2>
                 <p><strong>Date/Time Issued:</strong> MM/DD/YYYY HH:MM AM/PM</p>
-                <p><strong>Valid Until:</strong> MM/DD/YYYY HH:MM AM/PM</p>
                 <p><strong>Visitor's License Plate:</strong> ____________</p>
                 <p><strong>Unit Number Visiting:</strong> ____</p>
                 <p><strong>Issuing Guard:</strong> Sample Guard</p>
@@ -313,14 +327,14 @@ Valid Until: ${formattedExpirationDate}
 Visitor's License Plate: ${licensePlate.toUpperCase()}
 Unit Number Visiting: ${unitNumber}
 Issuing Guard: ${issuingGuard}
-`;
+            `;
 
             const passHtml = `
                 <div class="ticket-content">
+                    <div class="expiry">Valid Until: ${formattedExpirationDate}</div>
                     <img src="https://i.imgur.com/LmweghF.png" alt="The Gloucester Logo" class="logo-img">
                     <h2>VISITOR PARKING PASS</h2>
                     <p><strong>Date/Time Issued:</strong> ${formattedDate}</p>
-                    <p><strong>Valid Until:</strong> ${formattedExpirationDate}</p>
                     <p><strong>Visitor's License Plate:</strong> ${licensePlate.toUpperCase()}</p>
                     <p><strong>Unit Number Visiting:</strong> ${unitNumber}</p>
                     <p><strong>Issuing Guard:</strong> ${issuingGuard}</p>
@@ -334,7 +348,7 @@ Issuing Guard: ${issuingGuard}
             document.getElementById('ticketPreview').innerHTML = passHtml;
 
             // Generate QR Code
-            var qrcode = new QRCode(document.getElementById("qrCode"), {
+            var qrcode = new QRCode(document.querySelector("#qrCode"), {
                 text: qrData.trim(),
                 width: 150,
                 height: 150,
