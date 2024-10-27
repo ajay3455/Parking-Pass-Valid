@@ -18,7 +18,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh; /* Changed to min-height for better responsiveness */
         }
 
         .container {
@@ -115,9 +115,9 @@
             border: 2px solid #000;
             padding: 15px;
             display: inline-block;
-            text-align: center;
             width: 100%;
             box-sizing: border-box;
+            text-align: center; /* Ensure all content is centered */
         }
 
         .ticket-content h2 {
@@ -132,17 +132,21 @@
 
         .logo-img {
             width: 200px;
-            margin-bottom: 10px;
+            margin: 0 auto 10px auto; /* Center the logo */
+            display: block;
         }
 
         .car-img {
             width: 80px;
-            margin-top: 10px;
+            margin: 10px auto 0 auto; /* Center the car image */
+            display: block;
         }
 
         /* QR Code styles */
         .qr-code {
             margin-top: 15px;
+            display: flex;
+            justify-content: center; /* Center the QR code */
         }
 
         /* Adjusted ticket container to center content */
@@ -303,15 +307,13 @@
             const formattedExpirationDate = expirationDate.toLocaleString();
 
             // Prepare data for QR code
-            const qrData = {
-                "Date/Time Issued": formattedDate,
-                "Valid Until": formattedExpirationDate,
-                "Visitor's License Plate": licensePlate.toUpperCase(),
-                "Unit Number Visiting": unitNumber,
-                "Issuing Guard": issuingGuard
-            };
-
-            const qrDataString = JSON.stringify(qrData);
+            const qrData = `
+Date/Time Issued: ${formattedDate}
+Valid Until: ${formattedExpirationDate}
+Visitor's License Plate: ${licensePlate.toUpperCase()}
+Unit Number Visiting: ${unitNumber}
+Issuing Guard: ${issuingGuard}
+`;
 
             const passHtml = `
                 <div class="ticket-content">
@@ -333,7 +335,7 @@
 
             // Generate QR Code
             var qrcode = new QRCode(document.getElementById("qrCode"), {
-                text: qrDataString,
+                text: qrData.trim(),
                 width: 150,
                 height: 150,
                 colorDark : "#000000",
