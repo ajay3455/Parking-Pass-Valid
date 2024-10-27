@@ -131,6 +131,13 @@
             margin-top: 15px;
         }
 
+        .barcode-container img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
         .warning {
             color: #d00000;
             font-weight: bold;
@@ -315,7 +322,13 @@
         // Display the sample pass on page load
         document.getElementById('ticketPreview').innerHTML = samplePass;
         // Generate sample barcode
-        JsBarcode("#sampleBarcode", "SAMPLE123", {format: "CODE39", displayValue: false});
+        JsBarcode("#sampleBarcode", "SAMPLE123", {
+            format: "CODE128",
+            displayValue: false,
+            width: 1, // Reduced width
+            height: 60,
+            margin: 0
+        });
 
         document.getElementById('passForm').addEventListener('submit', function (e) {
             e.preventDefault();
@@ -400,14 +413,22 @@
 
             document.getElementById('ticketPreview').innerHTML = passHtml;
 
-            // Generate Barcode
-            JsBarcode("#barcode", barcodeData, {
+            // Generate Barcode with reduced width and check for data length
+            let barcodeOptions = {
                 format: "CODE128",
                 displayValue: false,
-                width: 2,
+                width: 1, // Reduced width
                 height: 60,
                 margin: 0
-            });
+            };
+
+            // Check if data length exceeds CODE128 capacity
+            if (barcodeData.length > 80) {
+                alert("The data to encode is too long for CODE128. Please reduce the input data.");
+                return;
+            }
+
+            JsBarcode("#barcode", barcodeData, barcodeOptions);
         }
 
         document.getElementById('printPass').addEventListener('click', function () {
