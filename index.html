@@ -51,7 +51,7 @@
         .gloucester-logo img {
             display: block;
             margin: 0 auto;
-            width: 100px; /* Reduced size */
+            width: 80px; /* Adjusted size */
             height: auto;
         }
 
@@ -70,6 +70,10 @@
             border-radius: 6px;
             font-size: 16px;
             box-sizing: border-box;
+        }
+
+        input:required {
+            border-color: #d00000;
         }
 
         button {
@@ -163,6 +167,25 @@
             background-color: #1b4332;
         }
 
+        fieldset {
+            border: 2px solid #95d5b2;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        legend {
+            font-weight: bold;
+            color: #2d6a4f;
+            padding: 0 10px;
+        }
+
+        .note {
+            font-size: 14px;
+            color: #d00000;
+            margin-bottom: 10px;
+        }
+
         /* Print Styles */
         @media print {
             body {
@@ -224,55 +247,78 @@
             </div>
             <h1>Exterior Parking Pass Generator</h1>
             <form id="passForm">
-                <label for="licensePlate">Visitor's License Plate:</label>
-                <input type="text" id="licensePlate" placeholder="e.g., ABC-1234" required>
+                <!-- Visitor Information Section -->
+                <fieldset>
+                    <legend>Visitor Information</legend>
 
-                <label for="visitorType">Visitor Type:</label>
-                <select id="visitorType" required>
-                    <option value="">Select Visitor Type</option>
-                    <option value="Resident Visitor">Resident Visitor</option>
-                    <option value="Contractor">Contractor</option>
-                </select>
+                    <label for="visitorName">Visitor's Name:</label>
+                    <input type="text" id="visitorName" placeholder="e.g., John Doe" required>
 
-                <!-- Unit Number (for Resident Visitor) -->
-                <div id="unitNumberContainer" style="display: none;">
-                    <label for="unitNumber">Unit Number Visiting:</label>
-                    <input type="text" id="unitNumber" placeholder="e.g., 101">
-                </div>
+                    <label for="licensePlate">Visitor's License Plate:</label>
+                    <input type="text" id="licensePlate" placeholder="e.g., ABC-1234" required>
 
-                <!-- Purpose of Visit (for Contractor) -->
-                <div id="purposeContainer" style="display: none;">
-                    <label for="purpose">Purpose of Visit:</label>
-                    <input type="text" id="purpose" placeholder="e.g., HVAC Maintenance">
-                </div>
+                    <label for="visitorType">Visitor Type:</label>
+                    <select id="visitorType" required>
+                        <option value="">Select Visitor Type</option>
+                        <option value="Resident Visitor">Resident Visitor</option>
+                        <option value="Contractor">Contractor</option>
+                    </select>
 
-                <label for="contactNumber">Visitor's Contact Number (Optional):</label>
-                <input type="text" id="contactNumber" placeholder="e.g., 123-456-7890">
+                    <!-- Unit Number (for Resident Visitor) -->
+                    <div id="unitNumberContainer" style="display: none;">
+                        <label for="unitNumber">Unit Number Visiting:</label>
+                        <input type="text" id="unitNumber" placeholder="e.g., 101" required>
+                    </div>
 
-                <label for="duration">Duration of Pass:</label>
-                <select id="duration">
-                    <option value="24 hours">24 hours (Default)</option>
-                    <option value="15 minutes">15 minutes</option>
-                    <option value="30 minutes">30 minutes</option>
-                    <option value="1 hour">1 hour</option>
-                    <option value="2 hours">2 hours</option>
-                    <option value="4 hours">4 hours</option>
-                    <option value="8 hours">8 hours</option>
-                    <option value="12 hours">12 hours</option>
-                </select>
+                    <!-- Purpose of Visit (for Contractor) -->
+                    <div id="purposeContainer" style="display: none;">
+                        <label for="purpose">Purpose of Visit:</label>
+                        <input type="text" id="purpose" placeholder="e.g., HVAC Maintenance" required>
+                    </div>
+                </fieldset>
 
-                <label for="issuingGuard">Issuing Guard:</label>
-                <select id="issuingGuard" required>
-                    <option value="">Select a guard</option>
-                    <option value="Ajaypreet">Ajaypreet</option>
-                    <option value="Amritpal">Amritpal</option>
-                    <option value="Meet">Meet</option>
-                    <option value="Jatin">Jatin</option>
-                    <option value="Praveen">Praveen</option>
-                    <option value="Jashanpreet">Jashanpreet</option>
-                    <option value="Arnav">Arnav</option>
-                    <option value="Gurwinder">Gurwinder</option>
-                </select>
+                <!-- Parking Details Section -->
+                <fieldset>
+                    <legend>Parking Details</legend>
+
+                    <label for="duration">Duration of Pass:</label>
+                    <select id="duration" required>
+                        <option value="">Select Duration</option>
+                        <option value="15 minutes">15 minutes</option>
+                        <option value="30 minutes">30 minutes</option>
+                        <option value="1 hour">1 hour</option>
+                        <option value="2 hours">2 hours</option>
+                        <option value="4 hours">4 hours</option>
+                        <option value="8 hours">8 hours</option>
+                        <option value="12 hours">12 hours</option>
+                        <option value="24 hours">24 hours</option>
+                    </select>
+
+                    <div class="note">
+                        Adding a phone number is mandatory if the parking permit is more than 30 minutes.
+                    </div>
+
+                    <label for="contactNumber">Visitor's Contact Number (Optional):</label>
+                    <input type="text" id="contactNumber" placeholder="e.g., 123-456-7890">
+                </fieldset>
+
+                <!-- Issuing Details Section -->
+                <fieldset>
+                    <legend>Issuing Details</legend>
+
+                    <label for="issuingGuard">Issuing Guard:</label>
+                    <select id="issuingGuard" required>
+                        <option value="">Select a guard</option>
+                        <option value="Ajaypreet">Ajaypreet</option>
+                        <option value="Amritpal">Amritpal</option>
+                        <option value="Meet">Meet</option>
+                        <option value="Jatin">Jatin</option>
+                        <option value="Praveen">Praveen</option>
+                        <option value="Jashanpreet">Jashanpreet</option>
+                        <option value="Arnav">Arnav</option>
+                        <option value="Gurwinder">Gurwinder</option>
+                    </select>
+                </fieldset>
 
                 <button type="submit">Generate & Print Pass</button>
             </form>
@@ -327,6 +373,29 @@
             }
         });
 
+        // Handle Duration Selection for Contact Number Requirement
+        const durationSelect = document.getElementById('duration');
+        const contactNumberInput = document.getElementById('contactNumber');
+        const contactNumberLabel = document.querySelector('label[for="contactNumber"]');
+
+        function updateContactNumberRequirement() {
+            const selectedDuration = durationSelect.value;
+            const durationsRequiringContact = ['1 hour', '2 hours', '4 hours', '8 hours', '12 hours', '24 hours'];
+            if (durationsRequiringContact.includes(selectedDuration)) {
+                contactNumberInput.required = true;
+                contactNumberLabel.innerHTML = "Visitor's Contact Number (Required):";
+            } else {
+                contactNumberInput.required = false;
+                contactNumberLabel.innerHTML = "Visitor's Contact Number (Optional):";
+            }
+        }
+
+        // Initial check
+        updateContactNumberRequirement();
+
+        // Update when duration changes
+        durationSelect.addEventListener('change', updateContactNumberRequirement);
+
         // Sample pass HTML
         const samplePass = `
             <div class="ticket-content">
@@ -344,6 +413,7 @@
                 <h2>VISITOR PARKING PASS</h2>
                 <div class="info-box">
                     <p><strong>Date/Time Issued:</strong> MM/DD/YYYY HH:MM AM/PM</p>
+                    <p><strong>Visitor's Name:</strong> ____________</p>
                     <p><strong>Visitor's License Plate:</strong> ____________</p>
                     <p><strong>Unit Number Visiting/Purpose:</strong> ____________</p>
                     <p><strong>Issuing Guard:</strong> Sample Guard</p>
@@ -372,6 +442,7 @@
         });
 
         function generatePass() {
+            const visitorName = document.getElementById('visitorName').value.trim();
             const licensePlate = document.getElementById('licensePlate').value.trim().toUpperCase();
             const visitorType = document.getElementById('visitorType').value;
             const unitNumber = document.getElementById('unitNumber').value.trim();
@@ -379,6 +450,21 @@
             const contactNumber = document.getElementById('contactNumber').value.trim();
             const duration = document.getElementById('duration').value.trim();
             const issuingGuard = document.getElementById('issuingGuard').value.trim();
+
+            // Check that duration is selected
+            if (!duration) {
+                alert('Please select a duration.');
+                durationSelect.focus();
+                return;
+            }
+
+            // Validate contact number if required
+            const durationsRequiringContact = ['1 hour', '2 hours', '4 hours', '8 hours', '12 hours', '24 hours'];
+            if (durationsRequiringContact.includes(duration) && contactNumber === '') {
+                alert('Contact number is required for durations over 30 minutes.');
+                contactNumberInput.focus();
+                return;
+            }
 
             const now = new Date();
             const formattedDate = now.toLocaleString();
@@ -408,9 +494,12 @@
                     expirationDate.setHours(expirationDate.getHours() + 12);
                     break;
                 case '24 hours':
-                default:
                     expirationDate.setHours(expirationDate.getHours() + 24);
                     break;
+                default:
+                    alert('Invalid duration selected.');
+                    durationSelect.focus();
+                    return;
             }
 
             const formattedExpirationDateForDisplay = formatDate(expirationDate);
@@ -450,6 +539,7 @@
                     <h2>VISITOR PARKING PASS</h2>
                     <div class="info-box">
                         <p><strong>Date/Time Issued:</strong> ${formattedDate}</p>
+                        <p><strong>Visitor's Name:</strong> ${visitorName}</p>
                         <p><strong>Visitor's License Plate:</strong> ${licensePlate}</p>
                         <p><strong>${unitOrPurposeLabel}:</strong> ${unitOrPurposeValue}</p>
                         <p><strong>Issuing Guard:</strong> ${issuingGuard}</p>
