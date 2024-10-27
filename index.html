@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Gloucester on Yonge - Parking Pass Generator</title>
+    <!-- Include QRCode.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        /* Existing styles... */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #e0f7e9, #b2f2bb);
+            color: #333;
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap; /* Adjusted for better responsiveness */
+            justify-content: center; /* Center content */
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .form-container, .ticket-container {
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            width: 100%; /* Adjusted for better responsiveness */
+            max-width: 500px; /* Set max-width for containers */
+            margin: 10px; /* Add margin between containers */
+        }
+
+        h1 {
+            text-align: center;
+            color: #2d6a4f;
+            margin-bottom: 20px;
+        }
+
+        .gloucester-logo img {
+            display: block;
+            margin: 0 auto;
+            width: 200px;
+            height: auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: #555;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 12px;
+            border: 2px solid #95d5b2;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #52b788;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            width: 100%;
+        }
+
+        .ticket {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .warning {
+            color: #d00000;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .action-buttons button {
+            width: 100%;
+            background-color: #40916c;
+            padding: 12px;
+        }
+
+        .action-buttons button:hover {
+            background-color: #2d6a4f;
+        }
+
+        .action-buttons button:active {
+            background-color: #1b4332;
+        }
+
+        /* Ticket content styles */
+        .ticket-content {
+            border: 2px solid #000;
+            padding: 15px;
+            display: inline-block;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .ticket-content h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .ticket-content p {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        .logo-img {
+            width: 200px;
+            margin-bottom: 10px;
+        }
+
+        .car-img {
+            width: 80px;
+            margin-top: 10px;
+        }
+
+        /* QR Code styles */
+        .qr-code {
+            margin-top: 15px;
+        }
+
+        /* Adjusted ticket container to center content */
+        .ticket-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Print Styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            #ticketPreview, #ticketPreview * {
+                visibility: visible;
+            }
+
+            #ticketPreview {
+                position: absolute;
+                top: 0;
+                left: 0;
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .action-buttons {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Form Section -->
+        <div class="form-container">
+            <div class="gloucester-logo">
+                <img src="https://i.imgur.com/LmweghF.png" alt="The Gloucester Logo">
+            </div>
+            <form id="passForm">
+                <label for="licensePlate">Visitor's License Plate:</label>
+                <input type="text" id="licensePlate" placeholder="e.g., ABC-1234" required>
+
+                <label for="unitNumber">Unit Number Visiting:</label>
+                <input type="text" id="unitNumber" placeholder="e.g., 101" required>
+
+                <label for="duration">Duration of Pass:</label>
+                <select id="duration">
+                    <option value="24 hours">24 hours (Default)</option>
+                    <option value="15 minutes">15 minutes</option>
+                    <option value="30 minutes">30 minutes</option>
+                    <option value="1 hour">1 hour</option>
+                    <option value="2 hours">2 hours</option>
+                    <option value="4 hours">4 hours</option>
+                    <option value="8 hours">8 hours</option>
+                    <option value="12 hours">12 hours</option>
+                </select>
+
+                <label for="issuingGuard">Issuing Guard:</label>
+                <select id="issuingGuard" required>
+                    <option value="">Select a guard</option>
+                    <option value="Ajaypreet">Ajaypreet</option>
+                    <option value="Amritpal">Amritpal</option>
+                    <option value="Meet">Meet</option>
+                    <option value="Jatin">Jatin</option>
+                    <option value="Praveen">Praveen</option>
+                    <option value="Jashanpreet">Jashanpreet</option>
+                    <option value="Arnav">Arnav</option>
+                    <option value="Gurwinder">Gurwinder</option>
+                </select>
+
+                <button type="submit">Generate & Print Pass</button>
+            </form>
+        </div>
+
+        <!-- Ticket Preview Section -->
+        <div class="ticket-container">
+            <div id="ticketPreview" class="ticket"></div>
+            <div class="action-buttons">
+                <button id="printPass">Print Pass</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample pass HTML
+        const samplePass = `
+            <div class="ticket-content">
+                <img src="https://i.imgur.com/LmweghF.png" alt="The Gloucester Logo" class="logo-img">
+                <h2>VISITOR PARKING PASS</h2>
+                <p><strong>Date/Time Issued:</strong> MM/DD/YYYY HH:MM AM/PM</p>
+                <p><strong>Valid Until:</strong> MM/DD/YYYY HH:MM AM/PM</p>
+                <p><strong>Visitor's License Plate:</strong> ____________</p>
+                <p><strong>Unit Number Visiting:</strong> ____</p>
+                <p><strong>Issuing Guard:</strong> Sample Guard</p>
+                <!-- QR Code Placeholder -->
+                <div class="qr-code" id="sampleQRCode">
+                    <img src="https://via.placeholder.com/150" alt="QR Code">
+                </div>
+                <img src="https://i.imgur.com/wdPLlvu.png" alt="Car Image" class="car-img">
+                <p class="warning">Please display this pass on your dashboard at all times.</p>
+            </div>
+        `;
+
+        // Display the sample pass on page load
+        document.getElementById('ticketPreview').innerHTML = samplePass;
+
+        document.getElementById('passForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            generatePass();
+        });
+
+        function generatePass() {
+            const licensePlate = document.getElementById('licensePlate').value.trim();
+            const unitNumber = document.getElementById('unitNumber').value.trim();
+            const duration = document.getElementById('duration').value.trim();
+            const issuingGuard = document.getElementById('issuingGuard').value.trim();
+
+            const now = new Date();
+            const formattedDate = now.toLocaleString();
+
+            // Calculate expiration time
+            let expirationDate = new Date(now);
+            switch(duration) {
+                case '15 minutes':
+                    expirationDate.setMinutes(expirationDate.getMinutes() + 15);
+                    break;
+                case '30 minutes':
+                    expirationDate.setMinutes(expirationDate.getMinutes() + 30);
+                    break;
+                case '1 hour':
+                    expirationDate.setHours(expirationDate.getHours() + 1);
+                    break;
+                case '2 hours':
+                    expirationDate.setHours(expirationDate.getHours() + 2);
+                    break;
+                case '4 hours':
+                    expirationDate.setHours(expirationDate.getHours() + 4);
+                    break;
+                case '8 hours':
+                    expirationDate.setHours(expirationDate.getHours() + 8);
+                    break;
+                case '12 hours':
+                    expirationDate.setHours(expirationDate.getHours() + 12);
+                    break;
+                case '24 hours':
+                default:
+                    expirationDate.setHours(expirationDate.getHours() + 24);
+                    break;
+            }
+
+            const formattedExpirationDate = expirationDate.toLocaleString();
+
+            // Prepare data for QR code
+            const qrData = {
+                "Date/Time Issued": formattedDate,
+                "Valid Until": formattedExpirationDate,
+                "Visitor's License Plate": licensePlate.toUpperCase(),
+                "Unit Number Visiting": unitNumber,
+                "Issuing Guard": issuingGuard
+            };
+
+            const qrDataString = JSON.stringify(qrData);
+
+            const passHtml = `
+                <div class="ticket-content">
+                    <img src="https://i.imgur.com/LmweghF.png" alt="The Gloucester Logo" class="logo-img">
+                    <h2>VISITOR PARKING PASS</h2>
+                    <p><strong>Date/Time Issued:</strong> ${formattedDate}</p>
+                    <p><strong>Valid Until:</strong> ${formattedExpirationDate}</p>
+                    <p><strong>Visitor's License Plate:</strong> ${licensePlate.toUpperCase()}</p>
+                    <p><strong>Unit Number Visiting:</strong> ${unitNumber}</p>
+                    <p><strong>Issuing Guard:</strong> ${issuingGuard}</p>
+                    <!-- QR Code will be inserted here -->
+                    <div class="qr-code" id="qrCode"></div>
+                    <img src="https://i.imgur.com/wdPLlvu.png" alt="Car Image" class="car-img">
+                    <p class="warning">Please display this pass on your dashboard at all times.</p>
+                </div>
+            `;
+
+            document.getElementById('ticketPreview').innerHTML = passHtml;
+
+            // Generate QR Code
+            var qrcode = new QRCode(document.getElementById("qrCode"), {
+                text: qrDataString,
+                width: 150,
+                height: 150,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        }
+
+        document.getElementById('printPass').addEventListener('click', function () {
+            window.print();
+        });
+    </script>
+</body>
+</html>
