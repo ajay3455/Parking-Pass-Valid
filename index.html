@@ -6,19 +6,21 @@
     <!-- Include JsBarcode Library -->
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
     <style>
-        /* Styles with enhancements for layout and barcode visibility */
+        /* Import Google Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
+        /* General Styles */
         body {
             font-family: 'Roboto', sans-serif;
             background: linear-gradient(135deg, #e0f7e9, #b2f2bb);
             color: #333;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: flex-start;
             min-height: 100vh;
+            box-sizing: border-box;
         }
 
         .container {
@@ -26,32 +28,39 @@
             flex-wrap: wrap;
             justify-content: center;
             width: 100%;
-            max-width: 1100px;
-            padding: 15px;
+            max-width: 1200px;
+            gap: 20px;
             box-sizing: border-box;
         }
 
-        .form-container, .ticket-container {
+        /* Form Section */
+        .form-container {
             background-color: #ffffff;
-            padding: 20px;
+            padding: 25px;
             border-radius: 12px;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 500px;
-            margin: 10px;
             box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .gloucester-logo img {
+            display: block;
+            margin: 0 auto 15px auto;
+            width: 50px; /* Further reduced size */
+            height: auto;
         }
 
         h1 {
             text-align: center;
             color: #2d6a4f;
             margin-bottom: 20px;
-            position: relative;
         }
 
-        /* Removed existing help icon */
-
-        /* Added Help Button */
+        /* Help Button */
         .help-button {
             background-color: #d00000;
             color: white;
@@ -64,6 +73,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            align-self: center;
         }
 
         .help-button:hover {
@@ -74,13 +84,7 @@
             background-color: #6a1b21;
         }
 
-        .gloucester-logo img {
-            display: block;
-            margin: 0 auto 10px auto;
-            width: 50px; /* Further reduced size */
-            height: auto;
-        }
-
+        /* Form Fields */
         label {
             display: block;
             margin-bottom: 8px;
@@ -92,17 +96,19 @@
             width: 100%;
             padding: 10px;
             margin-bottom: 12px;
-            border: 2px solid #95d5b2;
+            border: 2px solid #2d6a4f; /* Dark Green Border */
             border-radius: 6px;
             font-size: 16px;
             box-sizing: border-box;
+            transition: border-color 0.3s;
         }
 
-        input:required {
-            border-color: #d00000;
+        /* Error State */
+        input.error, select.error {
+            border-color: #d00000; /* Red Border */
         }
 
-        button {
+        button.generate-button {
             background-color: #52b788;
             color: white;
             padding: 12px;
@@ -114,29 +120,43 @@
             margin-top: 10px;
         }
 
-        button:hover {
+        button.generate-button:hover {
             background-color: #40916c;
         }
 
-        button:active {
+        button.generate-button:active {
             background-color: #2d6a4f;
         }
 
-        .ticket {
-            text-align: center;
-            margin-top: 20px;
+        /* Ticket Preview Section */
+        .ticket-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            box-sizing: border-box;
         }
 
         .ticket-content {
             border: 2px solid #000;
             padding: 20px;
-            display: inline-block;
             width: 100%;
-            max-width: 600px;
             box-sizing: border-box;
             text-align: center;
-            page-break-inside: avoid;
-            margin: 0 auto;
+        }
+
+        .expiry {
+            font-size: 32px;
+            font-weight: bold;
+            color: #d00000;
+            margin-bottom: 20px;
+        }
+
+        .expiry span {
+            display: block;
+            margin-top: 5px;
         }
 
         .info-box {
@@ -158,18 +178,6 @@
             width: 220px;
         }
 
-        .expiry {
-            font-size: 32px;
-            font-weight: bold;
-            color: #d00000;
-            margin-bottom: 20px;
-        }
-
-        .expiry span {
-            display: block;
-            margin-top: 5px;
-        }
-
         .barcode-container {
             margin-top: 20px;
         }
@@ -186,85 +194,6 @@
             font-weight: bold;
             margin-top: 15px;
             font-size: 18px;
-        }
-
-        .action-buttons {
-            display: flex;
-            justify-content: center;
-            margin-top: 15px;
-        }
-
-        .action-buttons button {
-            width: 100%;
-            background-color: #40916c;
-            padding: 12px;
-        }
-
-        .action-buttons button:hover {
-            background-color: #2d6a4f;
-        }
-
-        .action-buttons button:active {
-            background-color: #1b4332;
-        }
-
-        fieldset {
-            border: 2px solid #95d5b2;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-
-        legend {
-            font-weight: bold;
-            color: #2d6a4f;
-            padding: 0 10px;
-        }
-
-        .note {
-            font-size: 14px;
-            color: #d00000;
-            margin-bottom: 10px;
-        }
-
-        /* Instruction Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            padding-top: 60px;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4);
-        }
-
-        .modal-content {
-            background-color: #fff;
-            margin: 5% auto;
-            padding: 20px;
-            border: 2px solid #2d6a4f;
-            width: 80%;
-            max-width: 500px;
-            border-radius: 12px;
-            position: relative;
-        }
-
-        .close {
-            color: #aaa;
-            position: absolute;
-            right: 15px;
-            top: 10px;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: #000;
         }
 
         /* Print Styles */
@@ -316,6 +245,46 @@
                 margin: 0.25in;
             }
         }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            padding-top: 60px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 20px;
+            border: 2px solid #2d6a4f;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .close {
+            color: #aaa;
+            position: absolute;
+            right: 15px;
+            top: 10px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+        }
     </style>
 </head>
 <body>
@@ -326,9 +295,7 @@
             <div class="gloucester-logo">
                 <img src="https://i.imgur.com/LmweghF.png" alt="The Gloucester Logo">
             </div>
-            <h1>
-                Exterior Parking Pass Generator
-            </h1>
+            <h1>Exterior Parking Pass Generator</h1>
             <form id="passForm">
                 <!-- Visitor Information Section -->
                 <fieldset>
@@ -410,9 +377,30 @@
 
         <!-- Ticket Preview Section -->
         <div class="ticket-container">
-            <div id="ticketPreview" class="ticket"></div>
-            <div class="action-buttons">
-                <button id="printPass">Print Pass</button>
+            <div id="ticketPreview" class="ticket">
+                <!-- Initial Sample Pass -->
+                <div class="ticket-content">
+                    <div class="expiry">
+                        Valid Until:<br>
+                        <span style="font-size: 30px;">N/A</span>
+                        <span style="font-size: 28px;">N/A</span>
+                        <span style="font-size: 26px;">N/A</span>
+                    </div>
+                    <!-- Barcode Placeholder -->
+                    <div class="barcode-container">
+                        <img id="barcode" alt="Barcode">
+                    </div>
+                    <img src="https://i.imgur.com/LmweghF.png" alt="The Gloucester Logo" class="logo-img">
+                    <h2 style="font-size: 28px;">VISITOR PARKING PASS</h2>
+                    <div class="info-box">
+                        <p><strong>Date/Time Issued:</strong> N/A (N/A)</p>
+                        <p><strong>Visitor's Name:</strong> N/A</p>
+                        <p><strong>Visitor's License Plate:</strong> N/A</p>
+                        <p><strong>Unit Number Visiting/Purpose:</strong> N/A</p>
+                        <p><strong>Issuing Guard:</strong> N/A</p>
+                    </div>
+                    <p class="warning">Please display this pass on your dashboard at all times.</p>
+                </div>
             </div>
         </div>
     </div>
@@ -475,16 +463,22 @@
                 purposeContainer.style.display = 'none';
                 unitNumberInput.required = true;
                 purposeInput.required = false;
+                unitNumberInput.classList.remove('error');
+                purposeInput.classList.remove('error');
             } else if (visitorTypeSelect.value === 'Contractor') {
                 unitNumberContainer.style.display = 'none';
                 purposeContainer.style.display = 'block';
                 unitNumberInput.required = false;
                 purposeInput.required = true;
+                unitNumberInput.classList.remove('error');
+                purposeInput.classList.remove('error');
             } else {
                 unitNumberContainer.style.display = 'none';
                 purposeContainer.style.display = 'none';
                 unitNumberInput.required = false;
                 purposeInput.required = false;
+                unitNumberInput.classList.remove('error');
+                purposeInput.classList.remove('error');
             }
             updatePassPreview(); // Update preview when visitor type changes
         }
@@ -508,14 +502,41 @@
                 contactNumberInput.required = false;
                 contactNumberLabel.innerHTML = "Visitor's Contact Number (Optional):";
             }
+            validateField(contactNumberInput);
             updatePassPreview(); // Update preview when duration changes
         }
 
-        // Initial check
-        updateContactNumberRequirement();
+        // Validate individual field and set error class
+        function validateField(field) {
+            if (field.required && field.value.trim() === '') {
+                field.classList.add('error');
+            } else {
+                field.classList.remove('error');
+            }
+        }
 
-        // Update when duration changes
-        durationSelect.addEventListener('change', updateContactNumberRequirement);
+        // Event listeners for validation
+        contactNumberInput.addEventListener('input', function() {
+            validateField(contactNumberInput);
+            updatePassPreview();
+        });
+
+        durationSelect.addEventListener('change', function() {
+            updateContactNumberRequirement();
+        });
+
+        // Validation on other inputs
+        const formFields = document.querySelectorAll('#passForm input, #passForm select');
+        formFields.forEach(field => {
+            field.addEventListener('input', function() {
+                validateField(field);
+                updatePassPreview();
+            });
+            field.addEventListener('change', function() {
+                validateField(field);
+                updatePassPreview();
+            });
+        });
 
         // Instruction Modal Logic
         const helpButton = document.getElementById('helpButton');
@@ -548,7 +569,7 @@
                     </div>
                     <!-- Barcode Placeholder -->
                     <div class="barcode-container">
-                        <img id="barcode" alt="Barcode">
+                        <img id="barcodeImage" alt="Barcode">
                     </div>
                     <img src="https://i.imgur.com/LmweghF.png" alt="The Gloucester Logo" class="logo-img">
                     <h2 style="font-size: 28px;">VISITOR PARKING PASS</h2>
@@ -567,14 +588,14 @@
 
         // Function to update the pass preview
         function updatePassPreview() {
-            const visitorName = document.getElementById('visitorName').value.trim();
-            const licensePlate = document.getElementById('licensePlate').value.trim().toUpperCase();
-            const visitorType = document.getElementById('visitorType').value;
-            const unitNumber = unitNumberInput.value.trim();
-            const purpose = purposeInput.value.trim();
+            const visitorName = document.getElementById('visitorName').value.trim() || 'N/A';
+            const licensePlate = document.getElementById('licensePlate').value.trim().toUpperCase() || 'N/A';
+            const visitorType = document.getElementById('visitorType').value || 'N/A';
+            const unitNumber = unitNumberInput.value.trim() || 'N/A';
+            const purpose = purposeInput.value.trim() || 'N/A';
             const contactNumber = contactNumberInput.value.trim();
-            const duration = durationSelect.value.trim();
-            const issuingGuard = document.getElementById('issuingGuard').value.trim();
+            const duration = durationSelect.value.trim() || 'N/A';
+            const issuingGuard = document.getElementById('issuingGuard').value.trim() || 'N/A';
 
             // Prepare data for expiration
             const now = new Date();
@@ -609,35 +630,44 @@
                     break;
             }
 
-            let formattedExpirationDateForDisplay = '';
-            let expirationYear = '';
-            let expirationTime = '';
+            let formattedExpirationDateForDisplay = 'N/A';
+            let expirationYear = 'N/A';
+            let expirationTime = 'N/A';
 
-            if (expirationDate) {
+            if (expirationDate && duration !== 'N/A') {
                 formattedExpirationDateForDisplay = formatDate(expirationDate);
                 expirationYear = expirationDate.getFullYear();
-                expirationTime = expirationDate.toLocaleTimeString();
+                expirationTime = expirationDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             }
 
             // Prepare Unit Number or Purpose based on Visitor Type
-            let unitOrPurposeLabel = '';
-            let unitOrPurposeValue = '';
+            let unitOrPurposeLabel = 'Unit Number Visiting/Purpose';
+            let unitOrPurposeValue = 'N/A';
             if (visitorType === 'Resident Visitor') {
                 unitOrPurposeLabel = "Unit Number Visiting";
-                unitOrPurposeValue = unitNumber || 'N/A';
+                unitOrPurposeValue = unitNumber;
             } else if (visitorType === 'Contractor') {
                 unitOrPurposeLabel = "Purpose of Visit";
-                unitOrPurposeValue = purpose || 'N/A';
-            } else {
-                unitOrPurposeLabel = "Unit Number Visiting/Purpose";
-                unitOrPurposeValue = 'N/A';
+                unitOrPurposeValue = purpose;
             }
 
             // Prepare data for barcode
-            let barcodeData = contactNumber !== '' ? contactNumber : '000000';
+            let barcodeData = '';
+            if (duration !== 'N/A') {
+                if (['1 hour', '2 hours', '4 hours', '8 hours', '12 hours', '24 hours'].includes(duration)) {
+                    barcodeData = contactNumber !== '' ? contactNumber : '000000';
+                } else {
+                    barcodeData = contactNumber !== '' ? contactNumber : 'N/A';
+                }
+            } else {
+                barcodeData = 'N/A';
+            }
 
             // Prepare data for issued date
-            const formattedIssuedDate = now.toLocaleString();
+            const formattedIssuedDate = now.toLocaleString([], { 
+                year: 'numeric', month: '2-digit', day: '2-digit', 
+                hour: '2-digit', minute: '2-digit', hour12: true 
+            });
 
             // Create pass data object
             const passData = {
@@ -646,11 +676,11 @@
                 expirationTime: expirationTime,
                 issuedDate: formattedIssuedDate,
                 duration: duration,
-                visitorName: visitorName || 'N/A',
-                licensePlate: licensePlate || 'N/A',
+                visitorName: visitorName,
+                licensePlate: licensePlate,
                 unitOrPurposeLabel: unitOrPurposeLabel,
                 unitOrPurposeValue: unitOrPurposeValue,
-                issuingGuard: issuingGuard || 'N/A'
+                issuingGuard: issuingGuard
             };
 
             // Generate pass HTML
@@ -658,8 +688,8 @@
             document.getElementById('ticketPreview').innerHTML = passHtml;
 
             // Generate Barcode
-            if (duration) { // Only generate barcode if duration is selected
-                JsBarcode("#barcode", barcodeData, {
+            if (barcodeData !== 'N/A') { // Only generate barcode if data is available
+                JsBarcode("#barcodeImage", barcodeData, {
                     format: "CODE39",
                     displayValue: false,
                     lineColor: "#000000",
@@ -669,17 +699,38 @@
                     margin: 0
                 });
             } else {
-                // If duration is not selected, clear the barcode
-                document.getElementById('barcode').src = "";
+                // If no valid data, clear the barcode
+                document.getElementById('barcodeImage').src = "";
             }
         }
 
-        // Initial pass preview
+        // Initialize pass preview
         updatePassPreview();
 
         // Event listeners for live updating
-        document.getElementById('passForm').addEventListener('input', updatePassPreview);
-        document.getElementById('passForm').addEventListener('change', updatePassPreview);
+        const form = document.getElementById('passForm');
+        form.addEventListener('input', function(event) {
+            const target = event.target;
+            validateField(target);
+            updatePassPreview();
+        });
+
+        form.addEventListener('change', function(event) {
+            const target = event.target;
+            validateField(target);
+            updatePassPreview();
+        });
+
+        // Validation function
+        function validateField(field) {
+            if (field.required) {
+                if (field.value.trim() === '') {
+                    field.classList.add('error');
+                } else {
+                    field.classList.remove('error');
+                }
+            }
+        }
 
         // Print Pass Button Logic
         const printButton = document.getElementById('printPass');
