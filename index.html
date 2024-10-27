@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>The Gloucester on Yonge - Parking Pass Generator</title>
-    <!-- Include QRCode.js Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Include JsBarcode Library -->
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
     <style>
-        /* Styles remain mostly the same */
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+        /* Styles remain mostly the same with enhancements for layout */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
         body {
             font-family: 'Roboto', sans-serif;
@@ -60,7 +60,7 @@
             color: #555;
         }
 
-        input, select, textarea {
+        input, select {
             width: 100%;
             padding: 10px;
             margin-bottom: 12px;
@@ -85,33 +85,6 @@
             margin-top: 20px;
         }
 
-        .warning {
-            color: #d00000;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        .action-buttons {
-            display: flex;
-            justify-content: center;
-            margin-top: 15px;
-        }
-
-        .action-buttons button {
-            width: 100%;
-            background-color: #40916c;
-            padding: 12px;
-        }
-
-        .action-buttons button:hover {
-            background-color: #2d6a4f;
-        }
-
-        .action-buttons button:active {
-            background-color: #1b4332;
-        }
-
-        /* Ticket content styles */
         .ticket-content {
             border: 2px solid #000;
             padding: 15px;
@@ -122,30 +95,25 @@
             page-break-inside: avoid;
         }
 
-        .ticket-content h2 {
-            font-size: 24px;
-            margin-bottom: 15px;
+        /* Enhanced styles for better organization */
+        .info-box {
+            border: 2px solid #95d5b2;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            text-align: left;
         }
 
-        .ticket-content p {
-            font-size: 18px;
+        .info-box p {
             margin: 5px 0;
+            font-size: 18px;
         }
 
-        .logo-img {
-            width: 200px;
-            margin: 0 auto 10px auto;
-            display: block;
+        .info-box p strong {
+            display: inline-block;
+            width: 180px;
         }
 
-        /* QR Code styles */
-        .qr-code {
-            margin-top: 15px;
-            display: flex;
-            justify-content: center;
-        }
-
-        /* Expiry date at the top */
         .expiry {
             font-size: 28px;
             font-weight: bold;
@@ -153,11 +121,8 @@
             margin-bottom: 20px;
         }
 
-        /* Adjusted ticket container to center content */
-        .ticket-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        .barcode-container {
+            margin-top: 15px;
         }
 
         /* Print Styles */
@@ -294,21 +259,24 @@
                 </div>
                 <img src="https://i.imgur.com/LmweghF.png" alt="The Gloucester Logo" class="logo-img">
                 <h2>VISITOR PARKING PASS</h2>
-                <p><strong>Date/Time Issued:</strong> MM/DD/YYYY HH:MM AM/PM</p>
-                <p><strong>Visitor's License Plate:</strong> ____________</p>
-                <p><strong>Unit Number Visiting:</strong> ____</p>
-                <p><strong>Issuing Guard:</strong> Sample Guard</p>
-                <!-- QR Code Placeholder -->
-                <div class="qr-code" id="sampleQRCode">
-                    <img src="https://via.placeholder.com/150" alt="QR Code">
+                <div class="info-box">
+                    <p><strong>Date/Time Issued:</strong> MM/DD/YYYY HH:MM AM/PM</p>
+                    <p><strong>Visitor's License Plate:</strong> ____________</p>
+                    <p><strong>Unit Number Visiting:</strong> ____</p>
+                    <p><strong>Issuing Guard:</strong> Sample Guard</p>
                 </div>
-                <!-- Removed car image -->
+                <!-- Barcode Placeholder -->
+                <div class="barcode-container">
+                    <img id="sampleBarcode" alt="Barcode">
+                </div>
                 <p class="warning">Please display this pass on your dashboard at all times.</p>
             </div>
         `;
 
         // Display the sample pass on page load
         document.getElementById('ticketPreview').innerHTML = samplePass;
+        // Generate sample barcode
+        JsBarcode("#sampleBarcode", "SAMPLE123", {format: "CODE39", displayValue: false});
 
         document.getElementById('passForm').addEventListener('submit', function (e) {
             e.preventDefault();
@@ -316,7 +284,7 @@
         });
 
         function generatePass() {
-            const licensePlate = document.getElementById('licensePlate').value.trim();
+            const licensePlate = document.getElementById('licensePlate').value.trim().toUpperCase();
             const unitNumber = document.getElementById('unitNumber').value.trim();
             const duration = document.getElementById('duration').value.trim();
             const issuingGuard = document.getElementById('issuingGuard').value.trim();
@@ -359,14 +327,8 @@
             const expirationYear = expirationDate.getFullYear();
             const expirationTime = expirationDate.toLocaleTimeString();
 
-            // Prepare data for QR code
-            const qrData = `
-Date/Time Issued: ${formattedDate}
-Valid Until: ${formattedExpirationDate}
-Visitor's License Plate: ${licensePlate.toUpperCase()}
-Unit Number Visiting: ${unitNumber}
-Issuing Guard: ${issuingGuard}
-            `;
+            // Prepare data for barcode (you can customize this as needed)
+            const barcodeData = licensePlate + unitNumber + expirationDate.getTime();
 
             const passHtml = `
                 <div class="ticket-content">
@@ -378,27 +340,29 @@ Issuing Guard: ${issuingGuard}
                     </div>
                     <img src="https://i.imgur.com/LmweghF.png" alt="The Gloucester Logo" class="logo-img">
                     <h2>VISITOR PARKING PASS</h2>
-                    <p><strong>Date/Time Issued:</strong> ${formattedDate}</p>
-                    <p><strong>Visitor's License Plate:</strong> ${licensePlate.toUpperCase()}</p>
-                    <p><strong>Unit Number Visiting:</strong> ${unitNumber}</p>
-                    <p><strong>Issuing Guard:</strong> ${issuingGuard}</p>
-                    <!-- QR Code will be inserted here -->
-                    <div class="qr-code" id="qrCode"></div>
-                    <!-- Removed car image -->
+                    <div class="info-box">
+                        <p><strong>Date/Time Issued:</strong> ${formattedDate}</p>
+                        <p><strong>Visitor's License Plate:</strong> ${licensePlate}</p>
+                        <p><strong>Unit Number Visiting:</strong> ${unitNumber}</p>
+                        <p><strong>Issuing Guard:</strong> ${issuingGuard}</p>
+                    </div>
+                    <!-- Barcode will be inserted here -->
+                    <div class="barcode-container">
+                        <img id="barcode" alt="Barcode">
+                    </div>
                     <p class="warning">Please display this pass on your dashboard at all times.</p>
                 </div>
             `;
 
             document.getElementById('ticketPreview').innerHTML = passHtml;
 
-            // Generate QR Code
-            new QRCode(document.querySelector("#qrCode"), {
-                text: qrData.trim(),
-                width: 150,
-                height: 150,
-                colorDark : "#000000",
-                colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.H
+            // Generate Barcode
+            JsBarcode("#barcode", barcodeData, {
+                format: "CODE128",
+                displayValue: false,
+                width: 2,
+                height: 60,
+                margin: 0
             });
         }
 
