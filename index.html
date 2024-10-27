@@ -6,21 +6,19 @@
     <!-- Include JsBarcode Library -->
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
     <style>
-        /* Import Google Fonts */
+        /* Styles with enhancements for layout and barcode visibility */
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
-        /* General Styles */
         body {
             font-family: 'Roboto', sans-serif;
             background: linear-gradient(135deg, #e0f7e9, #b2f2bb);
             color: #333;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: flex-start;
             min-height: 100vh;
-            box-sizing: border-box;
         }
 
         .container {
@@ -28,30 +26,20 @@
             flex-wrap: wrap;
             justify-content: center;
             width: 100%;
-            max-width: 1200px;
-            gap: 20px;
+            max-width: 1100px;
+            padding: 15px;
             box-sizing: border-box;
         }
 
-        /* Form Section */
-        .form-container {
+        .form-container, .ticket-container {
             background-color: #ffffff;
-            padding: 25px;
+            padding: 15px;
             border-radius: 12px;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 500px;
+            margin: 10px;
             box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        .gloucester-logo img {
-            display: block;
-            margin: 0 auto 15px auto;
-            width: 50px; /* Further reduced size */
-            height: auto;
         }
 
         h1 {
@@ -60,31 +48,13 @@
             margin-bottom: 20px;
         }
 
-        /* Help Button */
-        .help-button {
-            background-color: #d00000;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            align-self: center;
+        .gloucester-logo img {
+            display: block;
+            margin: 0 auto;
+            width: 80px; /* Adjusted size */
+            height: auto;
         }
 
-        .help-button:hover {
-            background-color: #9b2226;
-        }
-
-        .help-button:active {
-            background-color: #6a1b21;
-        }
-
-        /* Form Fields */
         label {
             display: block;
             margin-bottom: 8px;
@@ -96,19 +66,17 @@
             width: 100%;
             padding: 10px;
             margin-bottom: 12px;
-            border: 2px solid #2d6a4f; /* Dark Green Border */
+            border: 2px solid #95d5b2;
             border-radius: 6px;
             font-size: 16px;
             box-sizing: border-box;
-            transition: border-color 0.3s;
         }
 
-        /* Error State */
-        input.error, select.error {
-            border-color: #d00000; /* Red Border */
+        input:required {
+            border-color: #d00000;
         }
 
-        button.generate-button {
+        button {
             background-color: #52b788;
             color: white;
             padding: 12px;
@@ -117,38 +85,46 @@
             cursor: pointer;
             font-size: 18px;
             width: 100%;
-            margin-top: 10px;
         }
 
-        button.generate-button:hover {
-            background-color: #40916c;
-        }
-
-        button.generate-button:active {
-            background-color: #2d6a4f;
-        }
-
-        /* Ticket Preview Section */
-        .ticket-container {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 600px;
-            box-sizing: border-box;
+        .ticket {
+            text-align: center;
+            margin-top: 20px;
         }
 
         .ticket-content {
             border: 2px solid #000;
-            padding: 20px;
+            padding: 15px;
+            display: inline-block;
             width: 100%;
+            max-width: 600px;
             box-sizing: border-box;
             text-align: center;
+            page-break-inside: avoid;
+            margin: 0 auto;
+        }
+
+        .info-box {
+            border: 2px solid #95d5b2;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            text-align: left;
+            box-sizing: border-box;
+        }
+
+        .info-box p {
+            margin: 10px 0;
+            font-size: 20px; /* Increased font size */
+        }
+
+        .info-box p strong {
+            display: inline-block;
+            width: 220px; /* Increased width to accommodate larger text */
         }
 
         .expiry {
-            font-size: 32px;
+            font-size: 32px; /* Increased font size */
             font-weight: bold;
             color: #d00000;
             margin-bottom: 20px;
@@ -157,25 +133,6 @@
         .expiry span {
             display: block;
             margin-top: 5px;
-        }
-
-        .info-box {
-            border: 2px solid #95d5b2;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            text-align: left;
-            box-sizing: border-box;
-        }
-
-        .info-box p {
-            margin: 10px 0;
-            font-size: 20px;
-        }
-
-        .info-box p strong {
-            display: inline-block;
-            width: 220px;
         }
 
         .barcode-container {
@@ -193,7 +150,46 @@
             color: #d00000;
             font-weight: bold;
             margin-top: 15px;
-            font-size: 18px;
+            font-size: 18px; /* Increased font size */
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .action-buttons button {
+            width: 100%;
+            background-color: #40916c;
+            padding: 12px;
+        }
+
+        .action-buttons button:hover {
+            background-color: #2d6a4f;
+        }
+
+        .action-buttons button:active {
+            background-color: #1b4332;
+        }
+
+        fieldset {
+            border: 2px solid #95d5b2;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        legend {
+            font-weight: bold;
+            color: #2d6a4f;
+            padding: 0 10px;
+        }
+
+        .note {
+            font-size: 14px;
+            color: #d00000;
+            margin-bottom: 10px;
         }
 
         /* Print Styles */
@@ -244,46 +240,6 @@
                 size: auto;
                 margin: 0.25in;
             }
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            padding-top: 60px;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4);
-        }
-
-        .modal-content {
-            background-color: #fff;
-            margin: 5% auto;
-            padding: 20px;
-            border: 2px solid #2d6a4f;
-            width: 80%;
-            max-width: 500px;
-            border-radius: 12px;
-            position: relative;
-        }
-
-        .close {
-            color: #aaa;
-            position: absolute;
-            right: 15px;
-            top: 10px;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: #000;
         }
     </style>
 </head>
@@ -370,61 +326,16 @@
                     </select>
                 </fieldset>
 
-                <!-- Help Button -->
-                <button type="button" class="help-button" id="helpButton">Help ❓</button>
+                <button type="submit">Generate & Print Pass</button>
             </form>
         </div>
 
         <!-- Ticket Preview Section -->
         <div class="ticket-container">
-            <div id="ticketPreview" class="ticket">
-                <!-- Initial Sample Pass -->
-                <div class="ticket-content">
-                    <div class="expiry">
-                        Valid Until:<br>
-                        <span style="font-size: 30px;">N/A</span>
-                        <span style="font-size: 28px;">N/A</span>
-                        <span style="font-size: 26px;">N/A</span>
-                    </div>
-                    <!-- Barcode Placeholder -->
-                    <div class="barcode-container">
-                        <img id="barcode" alt="Barcode">
-                    </div>
-                    <img src="https://i.imgur.com/LmweghF.png" alt="The Gloucester Logo" class="logo-img">
-                    <h2 style="font-size: 28px;">VISITOR PARKING PASS</h2>
-                    <div class="info-box">
-                        <p><strong>Date/Time Issued:</strong> N/A (N/A)</p>
-                        <p><strong>Visitor's Name:</strong> N/A</p>
-                        <p><strong>Visitor's License Plate:</strong> N/A</p>
-                        <p><strong>Unit Number Visiting/Purpose:</strong> N/A</p>
-                        <p><strong>Issuing Guard:</strong> N/A</p>
-                    </div>
-                    <p class="warning">Please display this pass on your dashboard at all times.</p>
-                </div>
+            <div id="ticketPreview" class="ticket"></div>
+            <div class="action-buttons">
+                <button id="printPass">Print Pass</button>
             </div>
-        </div>
-    </div>
-
-    <!-- Instruction Modal -->
-    <div id="instructionModal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="closeModal">&times;</span>
-            <h2>Instructions</h2>
-            <p>Follow these steps to generate a parking pass:</p>
-            <ol>
-                <li>Enter the visitor's name and license plate number.</li>
-                <li>Select the visitor type:
-                    <ul>
-                        <li>If 'Resident Visitor', enter the unit number being visited.</li>
-                        <li>If 'Contractor', enter the purpose of the visit.</li>
-                    </ul>
-                </li>
-                <li>Select the duration of the pass.</li>
-                <li>If the duration is more than 30 minutes, entering the contact number is mandatory.</li>
-                <li>Select your name from the 'Issuing Guard' list.</li>
-                <li>The pass preview will update automatically as you fill out the form.</li>
-                <li>Click 'Print Pass' to print the parking pass for the visitor.</li>
-            </ol>
         </div>
     </div>
 
@@ -463,24 +374,17 @@
                 purposeContainer.style.display = 'none';
                 unitNumberInput.required = true;
                 purposeInput.required = false;
-                unitNumberInput.classList.remove('error');
-                purposeInput.classList.remove('error');
             } else if (visitorTypeSelect.value === 'Contractor') {
                 unitNumberContainer.style.display = 'none';
                 purposeContainer.style.display = 'block';
                 unitNumberInput.required = false;
                 purposeInput.required = true;
-                unitNumberInput.classList.remove('error');
-                purposeInput.classList.remove('error');
             } else {
                 unitNumberContainer.style.display = 'none';
                 purposeContainer.style.display = 'none';
                 unitNumberInput.required = false;
                 purposeInput.required = false;
-                unitNumberInput.classList.remove('error');
-                purposeInput.classList.remove('error');
             }
-            updatePassPreview(); // Update preview when visitor type changes
         }
 
         visitorTypeSelect.addEventListener('change', updateVisitorTypeFields);
@@ -502,103 +406,95 @@
                 contactNumberInput.required = false;
                 contactNumberLabel.innerHTML = "Visitor's Contact Number (Optional):";
             }
-            validateField(contactNumberInput);
-            updatePassPreview(); // Update preview when duration changes
         }
 
-        // Validate individual field and set error class
-        function validateField(field) {
-            if (field.required && field.value.trim() === '') {
-                field.classList.add('error');
-            } else {
-                field.classList.remove('error');
-            }
-        }
+        // Initial check
+        updateContactNumberRequirement();
 
-        // Event listeners for validation
-        contactNumberInput.addEventListener('input', function() {
-            validateField(contactNumberInput);
-            updatePassPreview();
-        });
+        // Update when duration changes
+        durationSelect.addEventListener('change', updateContactNumberRequirement);
 
-        durationSelect.addEventListener('change', function() {
-            updateContactNumberRequirement();
-        });
-
-        // Validation on other inputs
-        const formFields = document.querySelectorAll('#passForm input, #passForm select');
-        formFields.forEach(field => {
-            field.addEventListener('input', function() {
-                validateField(field);
-                updatePassPreview();
-            });
-            field.addEventListener('change', function() {
-                validateField(field);
-                updatePassPreview();
-            });
-        });
-
-        // Instruction Modal Logic
-        const helpButton = document.getElementById('helpButton');
-        const instructionModal = document.getElementById('instructionModal');
-        const closeModal = document.getElementById('closeModal');
-
-        helpButton.addEventListener('click', function() {
-            instructionModal.style.display = 'block';
-        });
-
-        closeModal.addEventListener('click', function() {
-            instructionModal.style.display = 'none';
-        });
-
-        window.addEventListener('click', function(event) {
-            if (event.target == instructionModal) {
-                instructionModal.style.display = 'none';
-            }
-        });
-
-        // Function to generate pass HTML
-        function generatePassHtml(data) {
-            return `
-                <div class="ticket-content">
-                    <div class="expiry">
-                        Valid Until:<br>
-                        <span style="font-size: 30px;">${data.expirationDate}</span>
-                        <span style="font-size: 28px;">${data.expirationYear}</span>
-                        <span style="font-size: 26px;">${data.expirationTime}</span>
-                    </div>
-                    <!-- Barcode Placeholder -->
-                    <div class="barcode-container">
-                        <img id="barcodeImage" alt="Barcode">
-                    </div>
-                    <img src="https://i.imgur.com/LmweghF.png" alt="The Gloucester Logo" class="logo-img">
-                    <h2 style="font-size: 28px;">VISITOR PARKING PASS</h2>
-                    <div class="info-box">
-                        <p><strong>Date/Time Issued:</strong> ${data.issuedDate} (${data.duration})</p>
-                        <p><strong>Visitor's Name:</strong> ${data.visitorName}</p>
-                        <p><strong>Visitor's License Plate:</strong> ${data.licensePlate}</p>
-                        <p><strong>${data.unitOrPurposeLabel}:</strong> ${data.unitOrPurposeValue}</p>
-                        <p><strong>Issuing Guard:</strong> ${data.issuingGuard}</p>
-                        <!-- Contact number is not displayed -->
-                    </div>
-                    <p class="warning">Please display this pass on your dashboard at all times.</p>
+        // Sample pass HTML
+        const samplePass = `
+            <div class="ticket-content">
+                <div class="expiry">
+                    Valid Until:<br>
+                    <span style="font-size: 30px;">28th NOV</span>
+                    <span style="font-size: 28px;">2023</span>
+                    <span style="font-size: 26px;">HH:MM AM/PM</span>
                 </div>
-            `;
-        }
+                <!-- Barcode Placeholder -->
+                <div class="barcode-container">
+                    <img id="sampleBarcode" alt="Barcode">
+                </div>
+                <img src="https://i.imgur.com/LmweghF.png" alt="The Gloucester Logo" class="logo-img">
+                <h2 style="font-size: 28px;">VISITOR PARKING PASS</h2>
+                <div class="info-box">
+                    <p><strong>Date/Time Issued:</strong> MM/DD/YYYY HH:MM AM/PM</p>
+                    <p><strong>Visitor's Name:</strong> ____________</p>
+                    <p><strong>Visitor's License Plate:</strong> ____________</p>
+                    <p><strong>Unit Number Visiting/Purpose:</strong> ____________</p>
+                    <p><strong>Issuing Guard:</strong> Sample Guard</p>
+                    <!-- Contact number is not displayed -->
+                </div>
+                <p class="warning">Please display this pass on your dashboard at all times.</p>
+            </div>
+        `;
 
-        // Function to update the pass preview
-        function updatePassPreview() {
-            const visitorName = document.getElementById('visitorName').value.trim() || 'N/A';
-            const licensePlate = document.getElementById('licensePlate').value.trim().toUpperCase() || 'N/A';
-            const visitorType = document.getElementById('visitorType').value || 'N/A';
-            const unitNumber = unitNumberInput.value.trim() || 'N/A';
-            const purpose = purposeInput.value.trim() || 'N/A';
+        // Display the sample pass on page load
+        document.getElementById('ticketPreview').innerHTML = samplePass;
+        // Generate sample barcode
+        JsBarcode("#sampleBarcode", "000000", {
+            format: "CODE39",
+            displayValue: false,
+            lineColor: "#000000",
+            background: "#ffffff",
+            width: 4,   // Increased width for darker, wider bars
+            height: 100, // Increased height
+            margin: 0
+        });
+
+        document.getElementById('passForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            generatePass();
+        });
+
+        function generatePass() {
+            const visitorName = document.getElementById('visitorName').value.trim();
+            const licensePlate = document.getElementById('licensePlate').value.trim().toUpperCase();
+            const visitorType = document.getElementById('visitorType').value;
+            const unitNumber = unitNumberInput.value.trim();
+            const purpose = purposeInput.value.trim();
             const contactNumber = contactNumberInput.value.trim();
-            const duration = durationSelect.value.trim() || 'N/A';
-            const issuingGuard = document.getElementById('issuingGuard').value.trim() || 'N/A';
+            const duration = durationSelect.value.trim();
+            const issuingGuard = document.getElementById('issuingGuard').value.trim();
 
-            // Prepare data for expiration
+            // Check that duration is selected
+            if (!duration) {
+                alert('Please select a duration.');
+                durationSelect.focus();
+                return;
+            }
+
+            // Validate visitor type
+            if (!visitorType) {
+                alert('Please select a visitor type.');
+                visitorTypeSelect.focus();
+                return;
+            }
+
+            // Validate contact number if required
+            const durationsRequiringContact = ['1 hour', '2 hours', '4 hours', '8 hours', '12 hours', '24 hours'];
+            if (durationsRequiringContact.includes(duration) && contactNumber === '') {
+                alert('Contact number is required for durations over 30 minutes.');
+                contactNumberInput.focus();
+                return;
+            }
+
             const now = new Date();
+            const formattedDate = now.toLocaleString();
+
+            // Calculate expiration time
             let expirationDate = new Date(now);
             switch(duration) {
                 case '15 minutes':
@@ -626,115 +522,73 @@
                     expirationDate.setHours(expirationDate.getHours() + 24);
                     break;
                 default:
-                    expirationDate = null;
-                    break;
+                    alert('Invalid duration selected.');
+                    durationSelect.focus();
+                    return;
             }
 
-            let formattedExpirationDateForDisplay = 'N/A';
-            let expirationYear = 'N/A';
-            let expirationTime = 'N/A';
-
-            if (expirationDate && duration !== 'N/A') {
-                formattedExpirationDateForDisplay = formatDate(expirationDate);
-                expirationYear = expirationDate.getFullYear();
-                expirationTime = expirationDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            }
-
-            // Prepare Unit Number or Purpose based on Visitor Type
-            let unitOrPurposeLabel = 'Unit Number Visiting/Purpose';
-            let unitOrPurposeValue = 'N/A';
-            if (visitorType === 'Resident Visitor') {
-                unitOrPurposeLabel = "Unit Number Visiting";
-                unitOrPurposeValue = unitNumber;
-            } else if (visitorType === 'Contractor') {
-                unitOrPurposeLabel = "Purpose of Visit";
-                unitOrPurposeValue = purpose;
-            }
+            const formattedExpirationDateForDisplay = formatDate(expirationDate);
+            const expirationYear = expirationDate.getFullYear();
+            const expirationTime = expirationDate.toLocaleTimeString();
 
             // Prepare data for barcode
-            let barcodeData = '';
-            if (duration !== 'N/A') {
-                if (['1 hour', '2 hours', '4 hours', '8 hours', '12 hours', '24 hours'].includes(duration)) {
-                    barcodeData = contactNumber !== '' ? contactNumber : '000000';
-                } else {
-                    barcodeData = contactNumber !== '' ? contactNumber : 'N/A';
-                }
+            let barcodeData = contactNumber !== '' ? contactNumber : '000000';
+
+            // Prepare Unit Number or Purpose based on Visitor Type
+            let unitOrPurposeLabel = '';
+            let unitOrPurposeValue = '';
+            if (visitorType === 'Resident Visitor') {
+                unitOrPurposeLabel = "Unit Number Visiting";
+                unitOrPurposeValue = unitNumber || 'N/A';
+            } else if (visitorType === 'Contractor') {
+                unitOrPurposeLabel = "Purpose of Visit";
+                unitOrPurposeValue = purpose || 'N/A';
             } else {
-                barcodeData = 'N/A';
+                unitOrPurposeLabel = "Unit Number Visiting/Purpose";
+                unitOrPurposeValue = 'N/A';
             }
 
-            // Prepare data for issued date
-            const formattedIssuedDate = now.toLocaleString([], { 
-                year: 'numeric', month: '2-digit', day: '2-digit', 
-                hour: '2-digit', minute: '2-digit', hour12: true 
-            });
+            const passHtml = `
+                <div class="ticket-content">
+                    <div class="expiry">
+                        Valid Until:<br>
+                        <span style="font-size: 30px;">${formattedExpirationDateForDisplay}</span>
+                        <span style="font-size: 28px;">${expirationYear}</span>
+                        <span style="font-size: 26px;">${expirationTime}</span>
+                    </div>
+                    <!-- Barcode will be inserted here -->
+                    <div class="barcode-container">
+                        <img id="barcode" alt="Barcode">
+                    </div>
+                    <img src="https://i.imgur.com/LmweghF.png" alt="The Gloucester Logo" class="logo-img">
+                    <h2 style="font-size: 28px;">VISITOR PARKING PASS</h2>
+                    <div class="info-box">
+                        <p><strong>Date/Time Issued:</strong> ${formattedDate}</p>
+                        <p><strong>Visitor's Name:</strong> ${visitorName}</p>
+                        <p><strong>Visitor's License Plate:</strong> ${licensePlate}</p>
+                        <p><strong>${unitOrPurposeLabel}:</strong> ${unitOrPurposeValue}</p>
+                        <p><strong>Issuing Guard:</strong> ${issuingGuard}</p>
+                        <!-- Contact number is not displayed -->
+                    </div>
+                    <p class="warning">Please display this pass on your dashboard at all times.</p>
+                </div>
+            `;
 
-            // Create pass data object
-            const passData = {
-                expirationDate: formattedExpirationDateForDisplay,
-                expirationYear: expirationYear,
-                expirationTime: expirationTime,
-                issuedDate: formattedIssuedDate,
-                duration: duration,
-                visitorName: visitorName,
-                licensePlate: licensePlate,
-                unitOrPurposeLabel: unitOrPurposeLabel,
-                unitOrPurposeValue: unitOrPurposeValue,
-                issuingGuard: issuingGuard
-            };
-
-            // Generate pass HTML
-            const passHtml = generatePassHtml(passData);
             document.getElementById('ticketPreview').innerHTML = passHtml;
 
-            // Generate Barcode
-            if (barcodeData !== 'N/A') { // Only generate barcode if data is available
-                JsBarcode("#barcodeImage", barcodeData, {
-                    format: "CODE39",
-                    displayValue: false,
-                    lineColor: "#000000",
-                    background: "#ffffff",
-                    width: 4,    // Increased width for darker, wider bars
-                    height: 100, // Increased height
-                    margin: 0
-                });
-            } else {
-                // If no valid data, clear the barcode
-                document.getElementById('barcodeImage').src = "";
-            }
+            // Generate Barcode with increased width and height for better scannability
+            JsBarcode("#barcode", barcodeData, {
+                format: "CODE39",
+                displayValue: false,
+                lineColor: "#000000",
+                background: "#ffffff",
+                width: 4,    // Increased width for darker, wider bars
+                height: 100, // Increased height
+                margin: 0
+            });
         }
 
-        // Initialize pass preview
-        updatePassPreview();
-
-        // Event listeners for live updating
-        const form = document.getElementById('passForm');
-        form.addEventListener('input', function(event) {
-            const target = event.target;
-            validateField(target);
-            updatePassPreview();
-        });
-
-        form.addEventListener('change', function(event) {
-            const target = event.target;
-            validateField(target);
-            updatePassPreview();
-        });
-
-        // Validation function
-        function validateField(field) {
-            if (field.required) {
-                if (field.value.trim() === '') {
-                    field.classList.add('error');
-                } else {
-                    field.classList.remove('error');
-                }
-            }
-        }
-
-        // Print Pass Button Logic
-        const printButton = document.getElementById('printPass');
-        printButton.addEventListener('click', function () {
+        document.getElementById('printPass').addEventListener('click', function () {
             window.print();
         });
     </script>
